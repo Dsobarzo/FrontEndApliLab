@@ -1,0 +1,13 @@
+ruta: cd /ruta
+comando: npx create-react-app <nombre-del-proyecto>
+ruta: cd /ruta/<nombre-del-proyecto>
+comando: npm start
+
+modulos:
+npm install react (componentes)
+npm install react react-dom (modulos objetos)
+npm install react-router-dom (enrutamiento)
+npm install bootstrap (estilos predefinidos)
+npm install js-cookie (tokens)
+npm install md5 (encriptacion)
+npm install axios (base de datos)
