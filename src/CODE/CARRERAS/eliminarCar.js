@@ -22,7 +22,7 @@ const EliminarCarrera = ({ carreraId, onCarreraEliminada }) => {
 
   return (
     <div>
-      <button className="btn btn-danger m-1" onClick={eliminarCarrera}>
+      <button className="btn btn-danger btn-sm m-1 p-2" onClick={eliminarCarrera}>
         Eliminar
       </button>
     </div>

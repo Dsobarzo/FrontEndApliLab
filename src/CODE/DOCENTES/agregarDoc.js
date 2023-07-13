@@ -81,8 +81,9 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
   return (
     <div>
       <form>
-        <div className='form-group'>
-          <label>Nombre:</label>
+      <p className='fs-2 text-center'>AGREGAR DOCENTE</p>
+        <div className='form-group p-2'>
+          <label className='fs-4'>Nombre:</label>
           <input
             type='text'
             className='form-control'
@@ -91,8 +92,8 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
             maxLength={MAX_CARACTERES_NOMBRE}
           />
         </div>
-        <div className='form-group'>
-          <label>Apellido:</label>
+        <div className='form-group p-2'>
+          <label className='fs-4'>Apellido:</label>
           <input
             type='text'
             className='form-control'
@@ -101,8 +102,8 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
             maxLength={MAX_CARACTERES_APELLIDO}
           />
         </div>
-        <div className='form-group'>
-          <label>Email:</label>
+        <div className='form-group p-2'>
+          <label className='fs-4'>Email:</label>
           <input
             type='email'
             className='form-control'
@@ -111,8 +112,8 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
             maxLength={MAX_CARACTERES_EMAIL}
           />
         </div>
-        <div className='form-group'>
-          <label>Carrera:</label>
+        <div className='form-group p-2'>
+          <label className='fs-4'>Carrera:</label>
           <select
             className='form-control'
             value={selectedCarrera}
@@ -126,14 +127,16 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
             ))}
           </select>
         </div>
-        <button type='button' className='btn btn-primary' onClick={handleAgregar}>
-          Agregar
-        </button>
+        <div className='d-grid col-8 mx-auto'>
+          <button type='button' className='btn btn-dark mt-5' onClick={handleAgregar}>
+            Agregar
+          </button>
+        </div>
       </form>
       {alertaVisible && (
-        <div className='alert alert-danger d-flex align-items-center' role='alert'>
-          <svg className='bi flex-shrink-0 me-2' width='24' height='24' role='img' aria-label='Danger:'>
-            <use xlinkHref='#exclamation-triangle-fill' />
+        <div className="alert alert-danger d-flex align-items-center" role="alert">
+        <svg width="24" height="24" role="img" aria-label="Danger:">
+          <use xlinkHref="#exclamation-triangle-fill" />
           </svg>
           <div>Por favor, complete todos los campos.</div>
         </div>

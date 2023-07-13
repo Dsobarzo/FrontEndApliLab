@@ -121,74 +121,84 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
 
   return (
     <div>
-      <button className="btn btn-warning m-1" onClick={handleModificar}>
+      <button className="btn btn-warning btn-sm m-1 p-2" onClick={handleModificar}>
         Modificar
       </button>
       {modalVisible && (
-        <div className="modal" id="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
+        <div className="modal my-5" id="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
           <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" style={{ color: 'black' }}>Modificar Reserva</h5>
-                <button type="button" className="close" onClick={handleCancelar}>
-                  <span aria-hidden="true">&times;</span>
+            <div className="modal-content bg-secondary bg-opacity-75 border border-white">
+              <div className="modal-header bg-secondary">
+                <h5 className="modal-title fs-3 mx-2" style={{ color: 'white' }}>Modificar Reserva</h5>
+                <button type="button" className="close btn-close btn-close-white p-3" onClick={handleCancelar}>
                 </button>
               </div>
               <div className="modal-body">
                 <form>
-                  <div className="form-group">
-                    <label style={{ color: 'black' }}>Laboratorio:</label>
-                    <select className="form-control" value={laboratorio} onChange={handleLaboratorioChange}>
-                      <option value="">Seleccione un laboratorio</option>
-                      {laboratorios.map(lab => (
-                        <option key={lab.id} value={lab.id}>{lab.nombre}</option>
-                      ))}
-                    </select>
+                  <div className="form-group text-center">
+                    <label className='fs-4' style={{ color: 'white' }}>Laboratorio:</label>
+                    <div className='mx-5'>
+                      <select className="form-control" value={laboratorio} onChange={handleLaboratorioChange}>
+                        <option value="">Seleccione un laboratorio</option>
+                        {laboratorios.map(lab => (
+                          <option key={lab.id} value={lab.id}>{lab.nombre}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
                   <div className="form-group">
-                    <label style={{ color: 'black' }}>Docente:</label>
-                    <select className="form-control" value={docente} onChange={handleDocenteChange}>
-                      <option value="">Seleccione un docente</option>
-                      {docentes.map(docente => (
-                        <option key={docente.id} value={docente.id}>{docente.nombre}</option>
-                      ))}
-                    </select>
+                    <label style={{ color: 'white' }}>Docente:</label>
+                    <div className='mx-5'>
+                      <select className="form-control" value={docente} onChange={handleDocenteChange}>
+                        <option value="">Seleccione un docente</option>
+                        {docentes.map(docente => (
+                          <option key={docente.id} value={docente.id}>{docente.nombre}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label style={{ color: 'white' }}>Bloque:</label>
+                    <div className='mx-5'>
+                      <select className="form-control" value={bloque} onChange={handleBloqueChange}>
+                        <option value=''>Seleccione un bloque</option>
+                        <option value='1er Bloque'>1er Bloque [07:50 - 09:20]</option>
+                        <option value='2do Bloque'>2do Bloque [09:30 - 11:00]</option>
+                        <option value='3er Bloque'>3er Bloque [11:10 - 12:40]</option>
+                        <option value='4to Bloque'>4to Bloque [12:50 - 14-20]</option>
+                        <option value='5to Bloque'>5to Bloque [14:30 - 16:00]</option>
+                        <option value='6to Bloque'>6to Bloque [16:10 - 17:40]</option>
+                        <option value='7mo Bloque'>7mo Bloque [17:50 - 19:20]</option>
+                      </select>
+                    </div>
                   </div>
                   <div className="form-group">
-                    <label style={{ color: 'black' }}>Fecha:</label>
-                    <input
-                      type="date"
-                      className="form-control"
-                      value={fecha}
-                      onChange={handleFechaChange}
-                      maxLength={MAX_CARACTERES_FECHA}
-                    />
+                    <label style={{ color: 'white' }}>Estado:</label>
+                    <div className='mx-5'>
+                      <select className="form-control" value={estadoReserva} onChange={handleEstadoChange}>
+                        <option value={true}>Activo</option>
+                        <option value={false}>Inactivo</option>
+                      </select>
+                    </div>
                   </div>
                   <div className="form-group">
-                    <label style={{ color: 'black' }}>Bloque:</label>
-                    <select className="form-control" value={bloque} onChange={handleBloqueChange}>
-                      <option value=''>Seleccione un bloque</option>
-                      <option value='1er Bloque'>1er Bloque [07:50 - 09:20]</option>
-                      <option value='2do Bloque'>2do Bloque [09:30 - 11:00]</option>
-                      <option value='3er Bloque'>3er Bloque [11:10 - 12:40]</option>
-                      <option value='4to Bloque'>4to Bloque [12:50 - 14-20]</option>
-                      <option value='5to Bloque'>5to Bloque [14:30 - 16:00]</option>
-                      <option value='6to Bloque'>6to Bloque [16:10 - 17:40]</option>
-                      <option value='7mo Bloque'>7mo Bloque [17:50 - 19:20]</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label style={{ color: 'black' }}>Estado:</label>
-                    <select className="form-control" value={estadoReserva} onChange={handleEstadoChange}>
-                      <option value={true}>Activo</option>
-                      <option value={false}>Inactivo</option>
-                    </select>
+                    <label style={{ color: 'white' }}>Fecha:</label>
+                    <div className='mx-5'>
+                      <input
+                        type="date"
+                        className="form-control mx-5"
+                        value={fecha}
+                        onChange={handleFechaChange}
+                        maxLength={MAX_CARACTERES_FECHA}
+                      />
+                    </div>
                   </div>
                 </form>
               </div>
               {alertaVisible && (
-                <div className="alert alert-danger d-flex align-items-center" role="alert">
-                  <svg className="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                <div className="alert alert-danger d-flex mx-5" role="alert">
+                  <svg className="text-center" width="24" height="24" role="img" aria-label="Danger:">
                     <use xlinkHref="#exclamation-triangle-fill" />
                   </svg>
                   <div>
@@ -196,11 +206,11 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
                   </div>
                 </div>
               )}
-              <div className="modal-footer">
-                <button type="button" className="btn btn-primary" onClick={handleGuardar}>
+              <div className="modal-footer mx-auto">
+                <button type="button" className="btn btn-dark btn-md m-1 p-2" onClick={handleGuardar}>
                   Guardar
                 </button>
-                <button type="button" className="btn btn-secondary" onClick={handleCancelar}>
+                <button type="button" className="btn btn-dark btn-md m-1 p-2" onClick={handleCancelar}>
                   Cancelar
                 </button>
               </div>

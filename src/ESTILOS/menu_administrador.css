@@ -12,7 +12,7 @@
 .container{
     background-color: rgba(0, 0, 0, 0.795);
     min-height: 85vh;
-    min-width: 90vw;
+    min-width: 100vw;
 }
 .cerrarSesion{
     text-align: right;
@@ -28,10 +28,27 @@ h1{
     width: 150px;
 }
 .accordion-item{
-    margin: 0px 4vw;;
+    margin: 0px 9vw;;
+}
+.accordion-button{
+    border-color: black;
 }
 .accordion-header button:hover{
-    background-color: rgb(13, 17, 250);
+    background-color: rgba(13, 17, 250, 0);
+    color: white;
+}
+.accordion-header button:after{
+    background-color: white;
+    border-radius: 20%;
+}
+.accordion-header button:focus{
+    background-color: none;
+    border-color: none;
+    box-shadow: none;
+}
+.accordion-header button:not(.collapsed) {
+    background-color: rgb(255, 255, 255);
+    color:black;
 }
 .accordion-body{
     background: rgba(0, 0, 0, 0.377);

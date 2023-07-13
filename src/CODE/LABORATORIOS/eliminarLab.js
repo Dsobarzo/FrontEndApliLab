@@ -21,7 +21,7 @@ const EliminarLaboratorio = ({ laboratorioId, onLaboratorioEliminado }) => {
 
   return (
     <div>
-      <button className="btn btn-danger m-1" onClick={eliminarLaboratorio}>Eliminar</button>
+      <button className="btn btn-danger btn-sm m-1 p-2" onClick={eliminarLaboratorio}>Eliminar</button>
     </div>
   );
 };

@@ -11,3 +11,17 @@ npm install bootstrap (estilos predefinidos)
 npm install js-cookie (tokens)
 npm install md5 (encriptacion)
 npm install axios (base de datos)
+
+git:
+git add .
+git status
+git commit -m  "comentario de prueba"
+git push
+
+https://laboratorios.onrender.com/
+
+usuario: administrador
+contraseña: 12345678
+
+usuario: docente
+contraseña: 87654321

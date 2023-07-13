@@ -1,0 +1,65 @@
+.principal{
+    background-image: url("../IMAG/2022-04-09-umag.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    z-index: -1;
+}
+.container{
+    background-color: rgba(0, 0, 0, 0.795);
+    min-height: 85vh;
+    min-width: 100vw;
+}
+.cerrarSesion{
+    text-align: right;
+    padding-right: 20px;
+    color: white;
+}
+h1{
+    text-align: center;
+    top: 10px;
+    padding-bottom: 30px;
+}
+#btn_exit{
+    width: 150px;
+}
+.accordion-item{
+    margin: 0px 9vw;;
+}
+.accordion-button{
+    border-color: black;
+}
+.accordion-header button:hover{
+    background-color: rgba(13, 17, 250, 0);
+    color: white;
+}
+.accordion-header button:after{
+    background-color: white;
+    border-radius: 20%;
+}
+.accordion-header button:focus{
+    background-color: none;
+    border-color: none;
+    box-shadow: none;
+}
+.accordion-header button:not(.collapsed) {
+    background-color: rgb(255, 255, 255);
+    color:black;
+}
+.accordion-body{
+    background: rgba(0, 0, 0, 0.377);
+}
+.footer{
+    padding: 2vh;
+    background-color: rgb(0, 0, 0);
+    text-align: center;
+    width: 100%;
+    font-size: 1.5vh;
+}
+.footer p{
+    font-size: 2vh;
+}

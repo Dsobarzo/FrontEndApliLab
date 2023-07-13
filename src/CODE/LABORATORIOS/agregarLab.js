@@ -59,11 +59,11 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
   };
 
   return (
-    <div>
-      <h3>Agregar Laboratorio</h3>
+    <div><br/><br/><br/><br/>
       <form>
-        <div className='form-group'>
-          <label>Nombre:</label>
+        <p className='fs-2 text-center'>AGREGAR LABORATORIO</p>
+        <div className='form-group p-2'>
+          <label className='fs-4'>Nombre:</label>
           <input
             type='text'
             className='form-control'
@@ -72,8 +72,8 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
             maxLength={MAX_CARACTERES_NOMBRE}
           />
         </div>
-        <div className='form-group'>
-          <label>Ubicación:</label>
+        <div className='form-group p-2'>
+          <label className='fs-4'>Ubicación:</label>
           <input
             type='text'
             className='form-control'
@@ -82,8 +82,8 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
             maxLength={MAX_CARACTERES_UBICACION}
           />
         </div>
-        <div className='form-group'>
-          <label>Capacidad:</label>
+        <div className='form-group p-2'>
+          <label className='fs-4'>Capacidad:</label>
           <input
             type='number'
             className='form-control'
@@ -93,13 +93,15 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
             max={Math.pow(10, MAX_DIGITOS_CAPACIDAD) - 1}
           />
         </div>
-        <button type='button' className='btn btn-primary' onClick={handleAgregar}>
+        <div className='d-grid col-8 mx-auto'>
+        <button type='button' className='btn btn-dark mt-5' onClick={handleAgregar}>
           Agregar
         </button>
+        </div>
       </form>
       {alertaVisible && (
         <div className="alert alert-danger d-flex align-items-center" role="alert">
-          <svg className="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+          <svg width="24" height="24" role="img" aria-label="Danger:">
             <use xlinkHref="#exclamation-triangle-fill" />
           </svg>
           <div>

@@ -6,6 +6,7 @@ import ModificarCarrera from './modificarCar';
 
 const ListadoCarreras = () => {
   const [carreras, setCarreras] = useState([]);
+  const [filtroCarrera, setFiltroCarrera] = useState('');
 
   useEffect(() => {
     obtenerCarreras();
@@ -35,37 +36,61 @@ const ListadoCarreras = () => {
     obtenerCarreras();
   };
 
+  const handleFiltroCarreraChange = (e) => {
+    setFiltroCarrera(e.target.value);
+  };
+
+  const carrerasFiltradas = carreras.filter(carrera =>
+    carrera.carrera.toLowerCase().includes(filtroCarrera.toLowerCase())
+  );
+
+
   return (
     <div>
-      <h2>Listado de Carreras</h2>
+      <p className='fs-2'>Listado de Carreras</p>
       <div className='row align-items-start'>
-        <div className='col-10 table-responsive'>
+        <div className='row'>
+          <div className='col-1'>
+            <label htmlFor='filtroCarrera' className='form-label fs-4 text-center mt-1'>Buscar:</label>
+          </div>
+          <div className='col-2 pt-1'>
+            <input
+              type='text'
+              id='filtroCarrera'
+              className='form-control fs-6'
+              value={filtroCarrera}
+              onChange={handleFiltroCarreraChange}
+            />
+          </div>
+        </div>
+
+        <div className='col-10 table-responsive'><br />
           <table className='table table-dark table-striped table-hover caption-top align-middle'>
-            <caption>Listado de carreras</caption>
             <thead>
               <tr>
                 <th className='w-50'>Carrera</th>
-                <th className='w-25'>Modificar</th>
-                <th className='w-25'>Eliminar</th>
+                <th className='w-25 text-center'>Modificar</th>
+                <th className='w-25 text-center'>Eliminar</th>
               </tr>
             </thead>
             <tbody>
-              {carreras.map(carrera => (
+              {carrerasFiltradas.map(carrera => (
                 <tr key={carrera.id}>
                   <td>{carrera.carrera}</td>
-                  <td>
+                  <td className='text-center'>
                     <ModificarCarrera carrera={carrera} onCarreraModificada={handleCarreraModificada} />
                   </td>
-                  <td>
+                  <td className='text-center'>
                     <EliminarCarrera carreraId={carrera.id} onCarreraEliminada={handleCarreraEliminada} />
                   </td>
                 </tr>
               ))}
+
             </tbody>
+
           </table>
         </div>
         <div className='col-2'>
-          <h3>Agregar Carrera</h3>
           <AgregarCarrera onCarreraAgregada={handleCarreraAgregada} />
         </div>
       </div>

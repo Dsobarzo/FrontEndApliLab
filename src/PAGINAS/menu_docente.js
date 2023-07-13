@@ -1,3 +1,4 @@
+import '../ESTILOS/menu_docente.css';
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -40,13 +41,13 @@ function MenuDocente() {
           <h1>LISTADO DE LABORATORIOS RESERVADOS</h1>
         </div>
         <div className='accordion' id='accordionExample'>
-          <div className='accordion-item'>
+          <div className='accordion-item bg-black bg-opacity-50'>
             <h2 className='accordion-header' id='headingOne'>
-              <button className='accordion-button' type='button' data-bs-toggle='collapse' data-bs-target='#collapseOne' aria-expanded='true' aria-controls='collapseOne'>
+              <button className='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#collapseOne' aria-expanded='true' aria-controls='collapseOne'>
                 RESERVAS
               </button>
             </h2>
-            <div id='collapseOne' className='accordion-collapse' aria-labelledby='headingOne'>
+            <div id='collapseOne' className='accordion-collapse collapse' aria-labelledby='headingOne'>
               <div className='accordion-body'>
                 <div>
                   <ListadoSoloReservas />

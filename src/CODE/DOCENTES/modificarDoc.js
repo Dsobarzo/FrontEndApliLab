@@ -108,54 +108,53 @@ const ModificarDocente = ({ docente, onDocenteModificado }) => {
 
   return (
     <div>
-      <button className="btn btn-warning m-1" onClick={handleModificar}>
+      <button className="btn btn-warning btn-sm m-1 p-2" onClick={handleModificar}>
         Modificar
       </button>
       {modalVisible && (
-        <div className="modal" id="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
+        <div className="modal my-5" id="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
           <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" style={{ color: 'black' }}>Modificar Docente</h5>
-                <button type="button" className="close" onClick={handleCancelar}>
-                  <span aria-hidden="true">&times;</span>
+            <div className="modal-content bg-secondary bg-opacity-75 border border-white">
+              <div className="modal-header bg-secondary">
+                <h5 className="modal-title fs-3 mx-2" style={{ color: 'white' }}>Modificar Docente</h5>
+                <button type="button" className="close btn-close btn-close-white p-3" onClick={handleCancelar}>
                 </button>
               </div>
               <div className="modal-body">
                 <form>
-                  <div className="form-group">
-                    <label style={{ color: 'black' }}>Nombre:</label>
+                  <div className="form-group text-center">
+                    <label className='fs-4' style={{ color: 'white' }}>Nombre:</label>
                     <input
                       type="text"
-                      className="form-control"
+                      className="form-control  mx-auto"
                       value={nombre}
                       onChange={handleNombreChange}
                       maxLength={MAX_CARACTERES_NOMBRE}
                     />
                   </div>
                   <div className="form-group">
-                    <label style={{ color: 'black' }}>Apellido:</label>
+                    <label className='fs-4' style={{ color: 'white' }}>Apellido:</label>
                     <input
                       type="text"
-                      className="form-control"
+                      className="form-control mx-auto"
                       value={apellido}
                       onChange={handleApellidoChange}
                       maxLength={MAX_CARACTERES_APELLIDO}
                     />
                   </div>
                   <div className="form-group">
-                    <label style={{ color: 'black' }}>Email:</label>
+                    <label className='fs-4' style={{ color: 'white' }}>Email:</label>
                     <input
                       type="text"
-                      className="form-control"
+                      className="form-control mx-auto"
                       value={email}
                       onChange={handleEmailChange}
                       maxLength={MAX_CARACTERES_EMAIL}
                     />
                   </div>
-                  <div className="form-group">
-                    <label>Carrera:</label>
-                    <select style={{ background: 'grey' }}
+                  <div className="form-group mx-5 px-4">
+                    <label className='fs-4' style={{ color: 'white' }}>Carrera:</label>
+                    <select style={{ background: 'white' }}
                       className="form-control"
                       value={selectedCarrera}
                       onChange={handleCarreraChange}
@@ -171,20 +170,20 @@ const ModificarDocente = ({ docente, onDocenteModificado }) => {
                 </form>
               </div>
               {alertaVisible && (
-                <div className="alert alert-danger d-flex align-items-center" role="alert">
-                  <svg className="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
-                    <use xlinkHref="#exclamation-triangle-fill" />
+                <div className="alert alert-danger d-flex mx-5" role="alert">
+                <svg className="text-center" width="24" height="24" role="img" aria-label="Danger:">
+                  <use xlinkHref="#exclamation-triangle-fill" />
                   </svg>
                   <div>
                     No puedes dejar campos sin rellenar.
                   </div>
                 </div>
               )}
-              <div className="modal-footer">
-                <button type="button" className="btn btn-primary" onClick={handleGuardar}>
+              <div className="modal-footer mx-auto">
+                <button type="button" className="btn btn-dark btn-md m-1 p-2" onClick={handleGuardar}>
                   Guardar
                 </button>
-                <button type="button" className="btn btn-secondary" onClick={handleCancelar}>
+                <button type="button" className="btn btn-dark btn-md m-1 p-2" onClick={handleCancelar}>
                   Cancelar
                 </button>
               </div>

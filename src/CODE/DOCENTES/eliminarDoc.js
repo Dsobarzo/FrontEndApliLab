@@ -21,7 +21,7 @@ const EliminarDocente = ({ docenteId, onDocenteEliminado }) => {
 
   return (
     <div>
-      <button className="btn btn-danger m-1" onClick={eliminarDocente}>Eliminar</button>
+      <button className="btn btn-danger btn-sm m-1 p-2" onClick={eliminarDocente}>Eliminar</button>
     </div>
   );
 };

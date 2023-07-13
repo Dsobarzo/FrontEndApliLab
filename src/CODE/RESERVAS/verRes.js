@@ -7,7 +7,7 @@ const ListadoReservas = () => {
   const [reservas, setReservas] = useState([]);
   const [laboratorios, setLaboratorios] = useState([]);
   const [docentes, setDocentes] = useState([]);
-  const [filtroLaboratorio, setFiltroLaboratorio] = useState('');
+  const [filtroBusqueda, setFiltroBusqueda] = useState('');
   const [filtroFecha, setFiltroFecha] = useState('');
   const [filtroEstado, setFiltroEstado] = useState('');
 
@@ -61,8 +61,8 @@ const ListadoReservas = () => {
     obtenerReservas();
   };
 
-  const handleFiltroLaboratorioChange = (e) => {
-    setFiltroLaboratorio(e.target.value);
+  const handleFiltroBusquedaChange = (e) => {
+    setFiltroBusqueda(e.target.value);
   };
 
   const handleFiltroFechaChange = (e) => {
@@ -73,11 +73,20 @@ const ListadoReservas = () => {
     setFiltroEstado(e.target.value);
   };
 
-  const reservasFiltradas = reservas.filter((reserva) =>
-    (filtroLaboratorio ? reserva.id_laboratorios === parseInt(filtroLaboratorio) : true) &&
-    (filtroFecha ? reserva.fecha_reserva === filtroFecha : true) &&
-    (filtroEstado ? (filtroEstado === 'activo' ? reserva.estado : !reserva.estado) : true)
-  );
+  const reservasFiltradas = reservas.filter((reserva) => {
+    const laboratorio = laboratorios.find((lab) => lab.id === reserva.id_laboratorios);
+    const docente = docentes.find((doc) => doc.id === reserva.id_profesores);
+    const nombreLaboratorio = laboratorio ? laboratorio.nombre.toLowerCase() : '';
+    const nombreDocente = docente ? `${docente.nombre} ${docente.apellido}`.toLowerCase() : '';
+
+    return (
+      (!filtroBusqueda ||
+        nombreLaboratorio.includes(filtroBusqueda.toLowerCase()) ||
+        nombreDocente.includes(filtroBusqueda.toLowerCase())) &&
+      (!filtroFecha || reserva.fecha_reserva === filtroFecha) &&
+      (!filtroEstado || (filtroEstado === 'activo' ? reserva.estado : !reserva.estado))
+    );
+  });
 
   const obtenerClaseEstado = (estado) => {
     if (estado) {
@@ -89,84 +98,85 @@ const ListadoReservas = () => {
 
   return (
     <div>
-      <h2>Listado de Reservas</h2>
+      <p className='fs-2'>Listado de Reservas</p>
       <div className='row align-items-start'>
-        <div className='col-4'>
-          <label>Filtrar por Laboratorio:</label>
-          <select
-            value={filtroLaboratorio}
-            onChange={handleFiltroLaboratorioChange}
-            className='form-control'
-          >
-            <option value=''>Todos los laboratorios</option>
-            {laboratorios.map((lab) => (
-              <option key={lab.id} value={lab.id}>
-                {lab.nombre}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className='col-4'>
-          <label>Filtrar por Fecha:</label>
-          <input
-            type='date'
-            value={filtroFecha}
-            onChange={handleFiltroFechaChange}
-            className='form-control'
-          />
-        </div>
-        <div className='col-4'>
-          <label>Filtrar por Estado:</label>
-          <select
-            value={filtroEstado}
-            onChange={handleFiltroEstadoChange}
-            className='form-control'
-          >
-            <option value=''>Todos los estados</option>
-            <option value='activo'>Activo</option>
-            <option value='inactivo'>Inactivo</option>
-          </select>
-        </div>
-        <div className='col-10 table-responsive'>
-          <table className='table table-dark table-striped table-hover caption-top align-middle'>
-            <caption>Listado de reservas</caption>
-            <thead>
-              <tr>
-                <th className='w-25'>Laboratorio</th>
-                <th className='w-25'>Docente</th>
-                <th className='w-25'>Fecha Reserva</th>
-                <th className='w-25'>Bloque</th>
-                <th className='w-25'>Estado</th>
-                <th>Modificar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reservasFiltradas.map((reserva) => {
-                const laboratorio = laboratorios.find((lab) => lab.id === reserva.id_laboratorios);
-                const docente = docentes.find((doc) => doc.id === reserva.id_profesores);
-                const claseEstado = obtenerClaseEstado(reserva.estado);
+        <div className='row'>
+          <div className='col-1'>
+            <label className='form-label fs-4 text-center mt-1'>Buscar:</label>
+          </div>
+          <div className='col-2 pt-1'>
+            <input
+              type='text'
+              value={filtroBusqueda}
+              onChange={handleFiltroBusquedaChange}
+              className='form-control fs-6'
+            />
+          </div>
+          <div className='col-2'>
+            <label className='form-label fs-4 text-center mt-1'>Filtrar por estado:</label>
+          </div>
+          <div className='col-2 pt-1'>
+            <select
+              value={filtroEstado}
+              onChange={handleFiltroEstadoChange}
+              className='form-select fs-6'
+            >
+              <option value=''>Todos los estados</option>
+              <option value='activo'>Activo</option>
+              <option value='inactivo'>Inactivo</option>
+            </select>
+          </div>
+          <div className='col-2'>
+            <label className='form-label fs-4 text-center mt-1'>Filtrar por fecha:</label>
+          </div>
+          <div  className='col-2 pt-1'>
+            <input
+              type='date'
+              value={filtroFecha}
+              onChange={handleFiltroFechaChange}
+              className='form-control fs-6'
+            />
+          </div>
+          <div className='col-10 table-responsive'><br/>
+            <table className='table table-dark table-striped table-hover caption-top align-middle'>
+              <thead className=''>
+                <tr>
+                  <th className='w-25'>Laboratorio</th>
+                  <th className='w-25'>Docente</th>
+                  <th className='w-25 text-center'>Fecha Reserva</th>
+                  <th className='w-25 text-center'>Bloque</th>
+                  <th className='w-25'>Estado</th>
+                  <th className='w-25 text-center'>Modificar</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reservasFiltradas.map((reserva) => {
+                  const laboratorio = laboratorios.find((lab) => lab.id === reserva.id_laboratorios);
+                  const docente = docentes.find((doc) => doc.id === reserva.id_profesores);
+                  const claseEstado = obtenerClaseEstado(reserva.estado);
 
-                return (
-                  <tr key={reserva.id}>
-                    <td>{laboratorio ? laboratorio.nombre : ''}</td>
-                    <td>{docente ? `${docente.nombre} ${docente.apellido}` : ''}</td>
-                    <td>{reserva.fecha_reserva}</td>
-                    <td>{reserva.bloque}</td>
-                    <td className={claseEstado}>{reserva.estado ? 'Activo' : 'Inactivo'}</td>
-                    <td>
-                      <ModificarReserva
-                        reserva={reserva}
-                        onReservaModificada={handleReservaModificada}
-                      />
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-        <div className='col-2'>
-          <AgregarReserva onReservaAgregada={handleReservaAgregada} />
+                  return (
+                    <tr key={reserva.id}>
+                      <td>{laboratorio ? laboratorio.nombre : ''}</td>
+                      <td>{docente ? `${docente.nombre} ${docente.apellido}` : ''}</td>
+                      <td className='text-center'>{reserva.fecha_reserva}</td>
+                      <td className='text-center'>{reserva.bloque}</td>
+                      <td className={claseEstado}>{reserva.estado ? 'Activo' : 'Inactivo'}</td>
+                      <td className='text-center'>
+                        <ModificarReserva
+                          reserva={reserva}
+                          onReservaModificada={handleReservaModificada}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <div className='col-2'>
+            <AgregarReserva onReservaAgregada={handleReservaAgregada} />
+          </div>
         </div>
       </div>
     </div>
