@@ -60,13 +60,14 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
 
   return (
     <div><br/><br/><br/><br/>
+    <h2 className='text-left fs-3' style={{ color: 'white'}} >AGREGAR LABORATORIO</h2>
       <form>
-        <p className='fs-2 text-center'>AGREGAR LABORATORIO</p>
         <div className='form-group p-2'>
           <label className='fs-4'>Nombre:</label>
           <input
             type='text'
             className='form-control'
+            style={{ maxWidth: '10px' }}
             value={nombre}
             onChange={handleNombreChange}
             maxLength={MAX_CARACTERES_NOMBRE}
@@ -77,6 +78,7 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
           <input
             type='text'
             className='form-control'
+            style={{ maxWidth: '10px' }}
             value={ubicacion}
             onChange={handleUbicacionChange}
             maxLength={MAX_CARACTERES_UBICACION}
@@ -87,14 +89,15 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
           <input
             type='number'
             className='form-control'
+            style={{ maxWidth: '10px' }}
             value={capacidad}
             onChange={handleCapacidadChange}
             min={0}
             max={Math.pow(10, MAX_DIGITOS_CAPACIDAD) - 1}
           />
         </div>
-        <div className='d-grid col-8 mx-auto'>
-        <button type='button' className='btn btn-dark mt-5' onClick={handleAgregar}>
+        <div className='d-grid col-8 mx-4'>
+        <button type='button' className='btn btn-dark mt-5 ' onClick={handleAgregar}>
           Agregar
         </button>
         </div>

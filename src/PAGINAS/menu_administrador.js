@@ -38,19 +38,28 @@ function MenuAdministrador() {
 
   return (
     <div className='principal'>
-      <div className='container'>
+      <div className='container bg-black bg-opacity-75'>
         <div className='cerrarSesion'>
-          <button id='btn_exit' className='btn btn-outline-light' onClick={cerrarSesion}>Cerrar Sesión</button>
-          <h1>GESTIÓN DE LABORATORIOS</h1>
+          <div className="row align-items-center">
+            <div className="col">
+              <h1>GESTIÓN DE RESERVAS DE LABORATORIOS</h1>
+            </div>
+            <div className="col-auto">
+              <button id='btn_exit' className='btn btn-outline-light' onClick={cerrarSesion}>
+                Cerrar Sesión
+              </button>
+            </div>
+          </div>
         </div>
-        <div className='accordion' id='accordionExample'>
+
+        <div className='accordion'>
           <div className='accordion-item bg-black bg-opacity-50'>
             <h2 className='accordion-header' id='headingOne'>
-              <button className='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#collapseOne' aria-expanded='true' aria-controls='collapseOne'>
+              <button className='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#collapseOne' aria-expanded='false' aria-controls='collapseOne'>
                 LABORATORIOS
               </button>
             </h2>
-            <div id='collapseOne' className='accordion-collapse collapse' aria-labelledby='headingOne'>
+            <div id='collapseOne' className='accordion-collapse collapse' aria-labelledby='headingOne' data-bs-parent="#accordionFlushExample">
               <div className='accordion-body'>
                 <div>
                   <ListadoLaboratorios />
@@ -59,14 +68,13 @@ function MenuAdministrador() {
             </div>
           </div>
 
-
           <div className='accordion-item bg-black bg-opacity-50'>
             <h2 className='accordion-header' id='headingTwo'>
               <button className='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#collapseTwo' aria-expanded='false' aria-controls='collapseTwo'>
                 CARRERAS
               </button>
             </h2>
-            <div id='collapseTwo' className='accordion-collapse collapse' aria-labelledby='headingTwo'>
+            <div id='collapseTwo' className='accordion-collapse collapse' aria-labelledby='headingTwo' data-bs-parent="#accordionFlushExample">
               <div className='accordion-body'>
                 <div>
                   <ListadoCarreras />
@@ -82,7 +90,7 @@ function MenuAdministrador() {
                 DOCENTES
               </button>
             </h2>
-            <div id='collapseThree' className='accordion-collapse collapse' aria-labelledby='headingThree'>
+            <div id='collapseThree' className='accordion-collapse collapse' aria-labelledby='headingThree' data-bs-parent="#accordionFlushExample">
               <div className='accordion-body'>
                 <div>
                   <ListadoDocentes />
@@ -93,11 +101,11 @@ function MenuAdministrador() {
 
           <div className='accordion-item bg-black bg-opacity-50'>
             <h2 className='accordion-header' id='headingFor'>
-              <button className='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#collapseFor' aria-expanded='false' aria-controls='collapseFor'>
+              <button className='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#collapseFor' aria-expanded='false' aria-controls='collapseFor' data-bs-parent="#accordionExample">
                 RESERVAS
               </button>
             </h2>
-            <div id='collapseFor' className='accordion-collapse collapse' aria-labelledby='headingFor'>
+            <div id='collapseFor' className='accordion-collapse collapse' aria-labelledby='headingFor' data-bs-parent="#accordionFlushExample">
               <div className='accordion-body'>
                 <div>
                   <ListadoReservas />
@@ -110,13 +118,13 @@ function MenuAdministrador() {
         <br />
 
         <br />
-        
+
       </div>
       <div className='footer footer-container'>
-          <p> <i>Todos los derechos reservados © 2023 Universidad de Magallanes</i> </p>
-          <p>Rodrigo Romero Alvarado - Diego Sobarzo Obando</p>
-          <Link to='/term_cond'>Términos y Condiciones</Link>
-        </div>
+        <p> <i>Todos los derechos reservados © 2023 Universidad de Magallanes</i> </p>
+        <p>Rodrigo Romero Alvarado - Diego Sobarzo Obando</p>
+        <Link to='/term_cond'>Términos y Condiciones</Link>
+      </div>
     </div>
   );
 }

@@ -21,7 +21,6 @@ const ListadoReservas = () => {
     axios
       .get('https://apilab-backend-sandbox.up.railway.app/obtenerreservas')
       .then(response => {
-        console.log('Reservas obtenidas:', response.data);
         setReservas(response.data);
       })
       .catch(error => {
@@ -33,7 +32,6 @@ const ListadoReservas = () => {
     axios
       .get('https://apilab-backend-sandbox.up.railway.app/obtenerlaboratorios')
       .then(response => {
-        console.log('Laboratorios obtenidos:', response.data);
         setLaboratorios(response.data);
       })
       .catch(error => {
@@ -45,7 +43,6 @@ const ListadoReservas = () => {
     axios
       .get('https://apilab-backend-sandbox.up.railway.app/obtenerprofesores')
       .then(response => {
-        console.log('Docentes obtenidos:', response.data);
         setDocentes(response.data);
       })
       .catch(error => {
@@ -97,88 +94,84 @@ const ListadoReservas = () => {
   };
 
   return (
-    <div>
+    <div className='row'>
       <p className='fs-2'>Listado de Reservas</p>
-      <div className='row align-items-start'>
-        <div className='row'>
-          <div className='col-1'>
-            <label className='form-label fs-4 text-center mt-1'>Buscar:</label>
-          </div>
-          <div className='col-2 pt-1'>
-            <input
-              type='text'
-              value={filtroBusqueda}
-              onChange={handleFiltroBusquedaChange}
-              className='form-control fs-6'
-            />
-          </div>
-          <div className='col-2'>
-            <label className='form-label fs-4 text-center mt-1'>Filtrar por estado:</label>
-          </div>
-          <div className='col-2 pt-1'>
-            <select
-              value={filtroEstado}
-              onChange={handleFiltroEstadoChange}
-              className='form-select fs-6'
-            >
-              <option value=''>Todos los estados</option>
-              <option value='activo'>Activo</option>
-              <option value='inactivo'>Inactivo</option>
-            </select>
-          </div>
-          <div className='col-2'>
-            <label className='form-label fs-4 text-center mt-1'>Filtrar por fecha:</label>
-          </div>
-          <div  className='col-2 pt-1'>
-            <input
-              type='date'
-              value={filtroFecha}
-              onChange={handleFiltroFechaChange}
-              className='form-control fs-6'
-            />
-          </div>
-          <div className='col-10 table-responsive'><br/>
-            <table className='table table-dark table-striped table-hover caption-top align-middle'>
-              <thead className=''>
-                <tr>
-                  <th className='w-25'>Laboratorio</th>
-                  <th className='w-25'>Docente</th>
-                  <th className='w-25 text-center'>Fecha Reserva</th>
-                  <th className='w-25 text-center'>Bloque</th>
-                  <th className='w-25'>Estado</th>
-                  <th className='w-25 text-center'>Modificar</th>
-                </tr>
-              </thead>
-              <tbody>
-                {reservasFiltradas.map((reserva) => {
-                  const laboratorio = laboratorios.find((lab) => lab.id === reserva.id_laboratorios);
-                  const docente = docentes.find((doc) => doc.id === reserva.id_profesores);
-                  const claseEstado = obtenerClaseEstado(reserva.estado);
-
-                  return (
-                    <tr key={reserva.id}>
-                      <td>{laboratorio ? laboratorio.nombre : ''}</td>
-                      <td>{docente ? `${docente.nombre} ${docente.apellido}` : ''}</td>
-                      <td className='text-center'>{reserva.fecha_reserva}</td>
-                      <td className='text-center'>{reserva.bloque}</td>
-                      <td className={claseEstado}>{reserva.estado ? 'Activo' : 'Inactivo'}</td>
-                      <td className='text-center'>
-                        <ModificarReserva
-                          reserva={reserva}
-                          onReservaModificada={handleReservaModificada}
-                        />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-          <div className='col-2'>
-            <AgregarReserva onReservaAgregada={handleReservaAgregada} />
-          </div>
+      <div className='row align-items-start text-end'>
+        <div className='col-1'>
+          <label className='form-label fs-4 mt-1'>Buscar:</label>
+        </div>
+        <div className='col-2 p-1'>
+          <input
+            type='text'
+            value={filtroBusqueda}
+            onChange={handleFiltroBusquedaChange}
+            className='form-control fs-6'
+          />
+        </div>
+        <div className='col-1'>
+          <label className='form-label fs-4 mt-1 px-0'>Estado:</label>
+        </div>
+        <div className='col-2 pt-1'>
+          <select
+            value={filtroEstado}
+            onChange={handleFiltroEstadoChange}
+            className='form-select fs-6'
+          >
+            <option value=''>Todos los estados</option>
+            <option value='activo'>Activo</option>
+            <option value='inactivo'>Inactivo</option>
+          </select>
+        </div>
+        <div className='col-2'>
+          <label className='form-label fs-4 mt-1'>Filtrar por fecha:</label>
+        </div>
+        <div className='col-2 pt-1'>
+          <input
+            type='date'
+            value={filtroFecha}
+            onChange={handleFiltroFechaChange}
+            className='form-control fs-6'
+          />
         </div>
       </div>
+      <div className='col-10 table-responsive mt-3' style={{ maxHeight: '820px' }}>
+        <table className='table table-dark table-striped table-hover caption-top align-middle'>
+          <thead>
+            <tr>
+              <th className='w-25'>Laboratorio</th>
+              <th className='w-25'>Docente</th>
+              <th className='w-25 text-center'>Fecha Reserva</th>
+              <th className='w-25 text-center'>Bloque</th>
+              <th className='w-25'>Estado</th>
+              <th className='w-25 text-center'>Modificar</th>
+            </tr>
+          </thead>
+          <tbody>
+            {reservasFiltradas.map((reserva) => {
+              const laboratorio = laboratorios.find((lab) => lab.id === reserva.id_laboratorios);
+              const docente = docentes.find((doc) => doc.id === reserva.id_profesores);
+              const claseEstado = obtenerClaseEstado(reserva.estado);
+
+              return (
+                <tr key={reserva.id}>
+                  <td>{laboratorio ? laboratorio.nombre : ''}</td>
+                  <td>{docente ? `${docente.nombre} ${docente.apellido}` : ''}</td>
+                  <td className='text-center'>{reserva.fecha_reserva}</td>
+                  <td className='text-center'>{reserva.bloque}</td>
+                  <td className={claseEstado}>{reserva.estado ? 'Activo' : 'Inactivo'}</td>
+                  <td className='text-center'>
+                    <ModificarReserva reserva={reserva} onReservaModificada={handleReservaModificada} />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <div className='col-2'>
+        <AgregarReserva onReservaAgregada={handleReservaAgregada} />
+      </div>
+
     </div>
   );
 };

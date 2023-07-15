@@ -67,43 +67,54 @@ class Login extends React.Component {
 
     return (
       <div className="contenedor">
-        <div className='contenedorPrincipal'>
-          <div className='contenedorSecundaria'>
-            <div className='titulo'>
-              <h1>UNIVERSIDAD DE MAGALLANES</h1>
+        <div className="container m-0" id='contenedorPrincipal'>
+          <div className="row justify-content-center align-items-center">
+            <div className="col-lg-4 col-md-8 col-sm-10">
+              <div className="columna">
+                <div className="titulo mb-4">
+                  <h2 className='fs-1 mb-5'>UNIVERSIDAD DE MAGALLANES</h2>
+                </div>
+                <h2 className='mt-3' style={{ color: "white" }}>Gestión de reservas de laboratorios</h2>
+                <br/><br />
+                <p className="fs-4 text-start">
+                Esta es una herramienta útil y eficaz para optimizar tus procesos de reserva.<br/><br/>
+                ¡Disfruta de la facilidad y conveniencia que te brindamos y no dudes en comunicarte con nosotros si necesitas ayuda!
+                </p>
+              </div>
             </div>
-            <div>
-              
-            </div>
-            <div>
-              <label>Usuario</label>
-              <br />
-              <input
-                type='text'
-                name='username'
-                value={username}
-                onChange={this.handleChange}
-                className='control'
-              />
-              <br />
-              <label>Contraseña</label>
-              <br />
-              <input
-                type='password'
-                name='password'
-                value={password}
-                onChange={this.handleChange}
-                className='control'
-              />
-              <br />
-              <button className="btn btn-primary" onClick={this.handleSubmit}>
-                Iniciar Sesión
-              </button>
-              {error && <p>{error}</p>}
+            <div className="col-lg-4 col-md-6 col-sm-8">
+              <div className="columna" id='login'>
+                
+                <label>Usuario</label>
+                <br />
+                <input
+                  type="text"
+                  name="username"
+                  value={username}
+                  onChange={this.handleChange}
+                  className="control"
+                />
+                <br />
+                <label>Contraseña</label>
+                <br />
+                <input
+                  type="password"
+                  name="password"
+                  value={password}
+                  onChange={this.handleChange}
+                  className="control"
+                />
+                <br />
+                <button className="btn btn-primary" onClick={this.handleSubmit}>
+                  Iniciar Sesión
+                </button>
+                <div className='text-center mb-5'>
+                  {error && <p>{error}</p>}
+                  <Link to="/term_cond">Términos y Condiciones</Link>
+                </div>
+              </div>
             </div>
           </div>
-          <br />
-          <Link to="/term_cond">Términos y Condiciones</Link>
         </div>
       </div>
     );

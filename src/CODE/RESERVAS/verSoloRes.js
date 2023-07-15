@@ -18,7 +18,6 @@ const ListadoSoloReservas = () => {
     axios
       .get('https://apilab-backend-sandbox.up.railway.app/obtenerreservas')
       .then(response => {
-        console.log('Reservas obtenidas:', response.data);
         setReservas(response.data);
       })
       .catch(error => {
@@ -30,7 +29,6 @@ const ListadoSoloReservas = () => {
     axios
       .get('https://apilab-backend-sandbox.up.railway.app/obtenerlaboratorios')
       .then(response => {
-        console.log('Laboratorios obtenidos:', response.data);
         setLaboratorios(response.data);
       })
       .catch(error => {
@@ -42,20 +40,11 @@ const ListadoSoloReservas = () => {
     axios
       .get('https://apilab-backend-sandbox.up.railway.app/obtenerprofesores')
       .then(response => {
-        console.log('Docentes obtenidos:', response.data);
         setDocentes(response.data);
       })
       .catch(error => {
         console.error('Error al obtener los docentes:', error);
       });
-  };
-
-  const handleReservaModificada = () => {
-    obtenerReservas();
-  };
-
-  const handleReservaAgregada = () => {
-    obtenerReservas();
   };
 
   const handleFiltroBusquedaChange = (e) => {
@@ -115,7 +104,7 @@ const ListadoSoloReservas = () => {
               className='form-control fs-6'
             />
           </div>
-          <div className='col-12 table-responsive'><br/>
+          <div className='col-12 table-responsive mt-3' style={{ maxHeight: '400px' }}><br/>
             <table className='table table-dark table-striped table-hover caption-top align-middle'>
               <thead>
                 <tr>

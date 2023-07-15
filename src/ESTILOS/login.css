@@ -4,66 +4,65 @@
   background-attachment: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.contenedorPrincipal{
-  background-color: rgba(0, 0, 0, 0.712);
-  /*background-image: url("../IMAG/img_back2.png");
-  background-repeat: no-repeat;
-  background-position: bottom left;
-  background-size: 70vh;*/
-  border: 1.5px solid rgb(0, 0, 0);
-  border-radius: 15px;
-  text-align: center;
-  padding: 8vw 0vh 10vw 0vh;
-  width: 70vw;
-  max-width: 800px;
-  height: 80vh;
+#contenedorPrincipal{
+  background: #000000cf;  /* fallback para navegadores antiguos */
+  background: -webkit-linear-gradient(to left, #ffffff3c, #000000c6, #000000);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #fffefe00, #000000b5,#000000e0,#000000e8,
+            #000000ef, #000000); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 .titulo{
+  margin: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   color: white;
-  text-align: left;
+  border-bottom: 1px solid white;
 }
-h1{
-  left: 10px;
+.columna{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 5%;
+  height: 100vh;
+  text-align: center;
 }
-h4{
-  font-size: 20px;
-  padding: 0vh 2vh;
+#login{
+  background: linear-gradient(to left, #9a9a9a66, rgba(0, 0, 0, 0.652), rgba(0, 0, 0, 0.652), 
+            rgba(0, 0, 0, 0.652), rgba(0, 0, 0, 0.652), rgba(0, 0, 0, 0.652), rgba(0, 0, 0, 0.652),
+            rgba(0, 0, 0, 0.652), #9a9a9a66); /*Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  border-radius: 25px;
+  margin: 5vh 3vw;
+  height: 70vh;
+  border: 1px solid white; 
 }
 label{
-  font-size: 3vh;
+  font-size: 4vh;
   color: aliceblue;
-  margin: 10px;
+  margin-top: 10px;
 }
 input{
   border-radius: 10px;
   width: 30vw;
   max-width: 300px;
   min-width: 180px;
-  height: 40px;
+  height: 39px;
   text-align: center;
 }
-input.control::placeholder {
-  color: red;
-  background-color: blue;
-}
-
 .btn{
   margin-top: 30px;
   margin-bottom: 40px;
   width: 25%;
   min-width: 150px;
 }
-.error-alert {
-  background-color: red;
-  color: white;
-}
 p{
   color: rgb(255, 255, 255);
+  padding: 0vh 4vw;
 }

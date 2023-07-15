@@ -13,10 +13,11 @@
 
 .terminos-condiciones-container {
   color: white;
-  max-width: 900px;
-  padding: 20px;
+  max-width: 1400px;
+  padding: 20px 15vw;
   text-align: center;
-  background-color: rgba(0, 0, 0, 0.897);
+  background: linear-gradient(to left, #fffefe00, #000000d9,#000000e0,#000000e8,
+  #000000e0, #000000d0, #fffefe00); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   margin: auto;
 }
 

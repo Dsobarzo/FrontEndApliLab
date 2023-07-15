@@ -22,17 +22,11 @@ const ModificarDocente = ({ docente, onDocenteModificado }) => {
     axios
       .get('https://apilab-backend-sandbox.up.railway.app/obtenercarreras')
       .then(response => {
-        console.log('Carreras obtenidas:', response.data);
         setCarreras(response.data);
       })
       .catch(error => {
         console.error('Error al obtener las carreras:', error);
       });
-  };
-
-  const obtenerNombreCarrera = (idCarrera) => {
-    const carrera = carreras.find(c => c.id === idCarrera);
-    return carrera ? carrera.nombre : '';
   };
 
   const handleModificar = () => {
@@ -114,10 +108,11 @@ const ModificarDocente = ({ docente, onDocenteModificado }) => {
       {modalVisible && (
         <div className="modal my-5" id="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
           <div className="modal-dialog" role="document">
-            <div className="modal-content bg-secondary bg-opacity-75 border border-white">
-              <div className="modal-header bg-secondary">
-                <h5 className="modal-title fs-3 mx-2" style={{ color: 'white' }}>Modificar Docente</h5>
-                <button type="button" className="close btn-close btn-close-white p-3" onClick={handleCancelar}>
+          <div className="modal-content border border-white" style={{ marginTop: '100px', height: '650px', background: 'linear-gradient(to right, #ffffff, #000000, rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), #000000, #ffffff)' }}>
+              <div className="modal-header">
+                <h5 className="modal-title fs-3" style={{ color: 'white', marginLeft: '115px' }}>Modificar Docente</h5>
+                <button type="button" className="close" aria-label="Cerrar" style={{ backgroundColor: 'transparent', border: 'none' }} onClick={handleCancelar}>
+                  <span className='fs-1' style={{ color: 'red', marginTop: '10px' }}>&times;</span>
                 </button>
               </div>
               <div className="modal-body">
@@ -154,7 +149,7 @@ const ModificarDocente = ({ docente, onDocenteModificado }) => {
                   </div>
                   <div className="form-group mx-5 px-4">
                     <label className='fs-4' style={{ color: 'white' }}>Carrera:</label>
-                    <select style={{ background: 'white' }}
+                    <select style={{ background: 'white', width: '300px', textAlign: 'center', margin: '0px 10px' }}
                       className="form-control"
                       value={selectedCarrera}
                       onChange={handleCarreraChange}

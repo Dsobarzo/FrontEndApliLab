@@ -9,6 +9,7 @@ const AgregarReserva = ({ onReservaAgregada }) => {
   const [laboratorios, setLaboratorios] = useState([]);
   const [docentes, setDocentes] = useState([]);
   const [alertaVisible, setAlertaVisible] = useState(false);
+  const [errorFechaPasada, setErrorFechaPasada] = useState(false);
 
   useEffect(() => {
     obtenerLaboratorios();
@@ -19,7 +20,6 @@ const AgregarReserva = ({ onReservaAgregada }) => {
     axios
       .get('https://apilab-backend-sandbox.up.railway.app/obtenerlaboratorios')
       .then(response => {
-        console.log('Laboratorios obtenidos:', response.data);
         setLaboratorios(response.data);
       })
       .catch(error => {
@@ -31,7 +31,6 @@ const AgregarReserva = ({ onReservaAgregada }) => {
     axios
       .get('https://apilab-backend-sandbox.up.railway.app/obtenerprofesores')
       .then(response => {
-        console.log('Docentes obtenidos:', response.data);
         setDocentes(response.data);
       })
       .catch(error => {
@@ -50,16 +49,19 @@ const AgregarReserva = ({ onReservaAgregada }) => {
     const fechaReserva = new Date(fecha);
 
     if (fechaReserva < fechaActual) {
-      console.error('No se puede reservar en una fecha pasada');
+      setErrorFechaPasada(true);
       return;
     }
+
+    // Restablecer el mensaje de error si se agregó correctamente
+    setErrorFechaPasada(false);
 
     const reserva = {
       id_laboratorios: laboratorio,
       id_profesores: docente,
       fecha_reserva: fecha,
       bloque: bloque,
-      estado: true
+      estado: true,
     };
 
     axios
@@ -97,11 +99,16 @@ const AgregarReserva = ({ onReservaAgregada }) => {
   return (
     <div>
       <form>
-      <br/>
-        <p className='fs-2 text-center'>RESERVAR</p>
+        <br />
+        <h2 className='text-left fs-3' style={{ color: 'white' }}>AGREGAR LABORATORIO</h2>
         <div className='form-group p-2'>
           <label className='fs-4'>Laboratorio:</label>
-          <select className='form-control' value={laboratorio} onChange={handleLaboratorioChange}>
+          <select
+            className='form-control'
+            style={{ maxWidth: '180px' }}
+            value={laboratorio}
+            onChange={handleLaboratorioChange}
+          >
             <option value=''>Seleccion laboratorio</option>
             {laboratorios.map(lab => (
               <option key={lab.id} value={lab.id}>
@@ -112,7 +119,12 @@ const AgregarReserva = ({ onReservaAgregada }) => {
         </div>
         <div className='form-group p-2'>
           <label className='fs-4'>Docente:</label>
-          <select className='form-control'  value={docente} onChange={handleDocenteChange}>
+          <select 
+          className='form-control'  
+          style={{ maxWidth: '180px' }}
+          value={docente} 
+          onChange={handleDocenteChange}
+          >
             <option value=''>Seleccion docente</option>
             {docentes.map(docente => (
               <option key={docente.id} value={docente.id}>
@@ -123,7 +135,11 @@ const AgregarReserva = ({ onReservaAgregada }) => {
         </div>
         <div className='form-group p-2'>
           <label className='fs-4'>Bloque:</label>
-          <select className='form-control' value={bloque} onChange={handleBloqueChange}>
+          <select 
+          className='form-control' 
+          style={{ maxWidth: '180px' }}
+          value={bloque} 
+          onChange={handleBloqueChange}>
             <option value=''>Seleccion bloque</option>
             <option value='1er Bloque'>1er Bloque [07:50 - 09:20]</option>
             <option value='2do Bloque'>2do Bloque [09:30 - 11:00]</option>
@@ -136,20 +152,33 @@ const AgregarReserva = ({ onReservaAgregada }) => {
         </div >
         <div className='form-group p-2'>
           <label className='fs-4'>Fecha:</label>
-          <input type='date' className='form-control' value={fecha} onChange={handleFechaChange} />
+          <input 
+          type='date' 
+          className='form-control' 
+          style={{ maxWidth: '180px' }}
+          value={fecha} 
+          onChange={handleFechaChange} />
         </div>
-        <div className='d-grid col-8 mx-auto'>
-        <button type='button' className='btn btn-dark mt-5' onClick={handleAgregar}>
-          Agregar
-        </button>
+        <div className='d-grid col-8 mx-4'>
+          <button type='button' className='btn btn-dark mt-5' onClick={handleAgregar}>
+            Agregar
+          </button>
         </div>
       </form>
       {alertaVisible && (
         <div className="alert alert-danger d-flex align-items-center" role="alert">
-        <svg width="24" height="24" role="img" aria-label="Danger:">
-          <use xlinkHref="#exclamation-triangle-fill" />
+          <svg width="24" height="24" role="img" aria-label="Danger:">
+            <use xlinkHref="#exclamation-triangle-fill" />
           </svg>
           <div>Por favor, complete todos los campos.</div>
+        </div>
+      )}
+      {errorFechaPasada && (
+        <div className="alert alert-danger d-flex align-items-center" role="alert">
+          <svg width="24" height="24" role="img" aria-label="Danger:">
+            <use xlinkHref="#exclamation-triangle-fill" />
+          </svg>
+          <div>No se puede reservar en una fecha pasada.</div>
         </div>
       )}
     </div>

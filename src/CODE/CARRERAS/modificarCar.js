@@ -66,16 +66,17 @@ const ModificarCarrera = ({ carrera, onCarreraModificada }) => {
       {modalVisible && (
         <div className="modal my-5" id="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
           <div className="modal-dialog" role="document">
-            <div className="modal-content bg-secondary bg-opacity-75 border border-white">
-              <div className="modal-header bg-secondary">
-                <h5 className="modal-title fs-3 mx-2" style={{ color: 'white' }}>Modificar Carrera</h5>
-                <button type="button" className="close btn-close btn-close-white p-3" onClick={handleCancelar}>
+          <div className="modal-content border border-white" style={{ marginTop: '150px', height: '500px', background: 'linear-gradient(to right, #ffffff, #000000, rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), #000000, #ffffff)' }}>
+              <div className="modal-header">
+                <h5 className="modal-title fs-3" style={{ color: 'white', marginLeft: '115px' }}>Modificar Carrera</h5>
+                <button type="button" className="close" style={{ backgroundColor: 'transparent', border: 'none' }} onClick={handleCancelar}>
+                  <span className='fs-1' style={{ color: 'red', marginTop: '10px' }}>&times;</span>
                 </button>
               </div>
               <div className="modal-body text-center">
                 <form>
                   <div className="form-group">
-                    <label className='fs-4' style={{ color: 'white' }}>Nombre:</label>
+                    <label className='fs-4 mb-3' style={{ color: 'white' }}>Nombre:</label>
                     <input
                       type="text"
                       className="form-control  mx-auto"

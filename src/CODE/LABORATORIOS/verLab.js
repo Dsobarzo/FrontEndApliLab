@@ -17,7 +17,6 @@ const ListadoLaboratorios = () => {
     axios
       .get('https://apilab-backend-sandbox.up.railway.app/obtenerlaboratorios')
       .then(response => {
-        console.log('Laboratorios obtenidos:', response.data);
         const laboratoriosOrdenados = response.data.sort((a, b) => a.nombre.localeCompare(b.nombre));
         setLaboratorios(laboratoriosOrdenados);
       })
@@ -64,37 +63,38 @@ const ListadoLaboratorios = () => {
                 {laboratorio.nombre}
               </option>
             ))}
-          </select><br/>
+          </select><br />
         </div>
-        <table className="table table-dark table-striped table-hover caption-top align-middle">
-
-          <thead>
-            <tr>
-              <th className="w-50">Nombre</th>
-              <th className="w-25">Ubicación</th>
-              <th className="w-25">Capacidad</th>
-              <th className="w-25">Modificar</th>
-              <th className="w-25">Eliminar</th>
-            </tr>
-          </thead>
-          <tbody>
-            {laboratoriosFiltrados.map(laboratorio => (
-              <tr key={laboratorio.id}>
-                <td>{laboratorio.nombre}</td>
-                <td>{laboratorio.ubicacion}</td>
-                <td>{laboratorio.capacidad}</td>
-                <td>
-                  <ModificarLaboratorio laboratorio={laboratorio} onLaboratorioModificado={handleLaboratorioModificado} />
-                </td>
-                <td>
-                  <EliminarLaboratorio laboratorioId={laboratorio.id} onLaboratorioEliminado={handleLaboratorioEliminado} />
-                </td>
+        <div className='table-responsive' style={{ maxHeight: '600px'}}>
+          <table className="table table-dark table-striped table-hover caption-top align-middle">
+            <thead>
+              <tr>
+                <th className="w-50">Nombre</th>
+                <th className="w-25 text-center">Ubicación</th>
+                <th className="w-25 text-center">Capacidad</th>
+                <th className="w-25 text-center">Modificar</th>
+                <th className="w-25 text-center">Eliminar</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {laboratoriosFiltrados.map(laboratorio => (
+                <tr key={laboratorio.id}>
+                  <td>{laboratorio.nombre}</td>
+                  <td className='text-center'>{laboratorio.ubicacion}</td>
+                  <td className='text-center'>{laboratorio.capacidad}</td>
+                  <td className='text-center'>
+                    <ModificarLaboratorio laboratorio={laboratorio} onLaboratorioModificado={handleLaboratorioModificado} />
+                  </td>
+                  <td className='text-center'>
+                    <EliminarLaboratorio laboratorioId={laboratorio.id} onLaboratorioEliminado={handleLaboratorioEliminado} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div className='col-2 table-responsive'>
+      <div className='col-2'>
         <AgregarLaboratorio onLaboratorioAgregado={handleLaboratorioAgregado} />
       </div>
     </div>

@@ -9,7 +9,7 @@ function TerminosCondiciones() {
   return (
     <div className="fond">
       <div className="terminos-condiciones-container">
-        <h1>Términos y Condiciones de Uso</h1><br />
+        <h2 className='fs-1 mb-5'>Términos y Condiciones de Uso</h2><br />
         <p>Bienvenido a nuestra página web. Estos Términos y Condiciones de Uso ("Términos") establecen los términos legales y condiciones bajo los cuales puedes acceder y utilizar nuestro sitio web. Al acceder y utilizar nuestra página web, aceptas cumplir y estar sujeto a estos Términos. Si no estás de acuerdo con alguno de los términos establecidos aquí, por favor no utilices nuestra página web.</p>
 
         <h2>Propiedad Intelectual</h2>

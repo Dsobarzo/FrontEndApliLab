@@ -21,7 +21,6 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
     axios
       .get('https://apilab-backend-sandbox.up.railway.app/obtenercarreras')
       .then(response => {
-        console.log('Carreras obtenidas:', response.data);
         setCarreras(response.data);
       })
       .catch(error => {
@@ -80,13 +79,14 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
 
   return (
     <div>
-      <form>
-      <p className='fs-2 text-center'>AGREGAR DOCENTE</p>
+      <form><br/>
+      <h2 className='text-left fs-3' style={{ color: 'white'}} >AGREGAR LABORATORIO</h2>
         <div className='form-group p-2'>
           <label className='fs-4'>Nombre:</label>
           <input
             type='text'
             className='form-control'
+            style={{ maxWidth: '10px' }}
             value={nombre}
             onChange={handleNombreChange}
             maxLength={MAX_CARACTERES_NOMBRE}
@@ -97,6 +97,7 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
           <input
             type='text'
             className='form-control'
+            style={{ maxWidth: '10px' }}
             value={apellido}
             onChange={handleApellidoChange}
             maxLength={MAX_CARACTERES_APELLIDO}
@@ -107,6 +108,7 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
           <input
             type='email'
             className='form-control'
+            style={{ maxWidth: '10px' }}
             value={email}
             onChange={handleEmailChange}
             maxLength={MAX_CARACTERES_EMAIL}
@@ -116,10 +118,11 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
           <label className='fs-4'>Carrera:</label>
           <select
             className='form-control'
+            style={{ maxWidth: '180px' }}
             value={selectedCarrera}
             onChange={handleCarreraChange}
           >
-            <option value=''>Seleccionar una carrera</option>
+            <option value=''>Seleccionar carrera</option>
             {carreras.map(carrera => (
               <option key={carrera.id} value={carrera.id}>
                 {carrera.id}
@@ -127,7 +130,7 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
             ))}
           </select>
         </div>
-        <div className='d-grid col-8 mx-auto'>
+        <div className='d-grid col-8 mx-4'>
           <button type='button' className='btn btn-dark mt-5' onClick={handleAgregar}>
             Agregar
           </button>

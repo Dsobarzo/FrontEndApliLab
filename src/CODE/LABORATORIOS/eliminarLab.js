@@ -5,18 +5,20 @@ const EliminarLaboratorio = ({ laboratorioId, onLaboratorioEliminado }) => {
   const [id, setId] = useState(laboratorioId);
 
   const eliminarLaboratorio = () => {
-    axios.delete(`https://apilab-backend-sandbox.up.railway.app/borrarlaboratorio/${id}`)
-      .then(response => {
-        // El laboratorio se eliminó exitosamente
-        console.log('Laboratorio eliminado:', response.data);
-        // Aquí puedes realizar acciones adicionales después de eliminar el laboratorio, si es necesario.
-        onLaboratorioEliminado(); // Llamar a la función para actualizar la lista de laboratorios
-      })
-      .catch(error => {
-        // Ocurrió un error al eliminar el laboratorio
-        console.error('Error al eliminar el laboratorio:', error);
-        // Aquí puedes manejar el error de acuerdo a tus necesidades.
-      });
+    const confirmacion = window.confirm('¿Estás seguro de que deseas eliminar este laboratorio?');
+
+    if (confirmacion) {
+      axios.delete(`https://apilab-backend-sandbox.up.railway.app/borrarlaboratorio/${id}`)
+        .then(response => {
+          // El laboratorio se eliminó exitosamente
+          console.log('Laboratorio eliminado:', response.data);
+          onLaboratorioEliminado(); // Actualizar la lista de laboratorios
+        })
+        .catch(error => {
+          // Ocurrió un error al eliminar el laboratorio
+          console.error('Error al eliminar el laboratorio:', error);
+        });
+    }
   };
 
   return (

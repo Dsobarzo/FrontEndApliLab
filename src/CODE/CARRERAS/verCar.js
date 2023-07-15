@@ -16,7 +16,6 @@ const ListadoCarreras = () => {
     axios
       .get('https://apilab-backend-sandbox.up.railway.app/obtenercarreras')
       .then(response => {
-        console.log('Carreras obtenidas:', response.data);
         setCarreras(response.data);
       })
       .catch(error => {
@@ -46,7 +45,7 @@ const ListadoCarreras = () => {
 
 
   return (
-    <div>
+    <div className='row'>
       <p className='fs-2'>Listado de Carreras</p>
       <div className='row align-items-start'>
         <div className='row'>
@@ -64,7 +63,7 @@ const ListadoCarreras = () => {
           </div>
         </div>
 
-        <div className='col-10 table-responsive'><br />
+        <div className='col-10 table-responsive' style={{ maxHeight: '600px'}}><br/>
           <table className='table table-dark table-striped table-hover caption-top align-middle'>
             <thead>
               <tr>

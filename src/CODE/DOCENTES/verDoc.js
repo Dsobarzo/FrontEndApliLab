@@ -18,7 +18,6 @@ const ListadoDocentes = () => {
     axios
       .get('https://apilab-backend-sandbox.up.railway.app/obtenerprofesores')
       .then(response => {
-        console.log('Docentes obtenidos:', response.data);
         setDocentes(response.data);
       })
       .catch(error => {
@@ -30,7 +29,6 @@ const ListadoDocentes = () => {
     axios
       .get('https://apilab-backend-sandbox.up.railway.app/obtenercarreras')
       .then(response => {
-        console.log('Carreras obtenidas:', response.data);
         const carrerasMap = response.data.reduce((map, carrera) => {
           map[carrera.id] = carrera.carrera;
           return map;
@@ -70,7 +68,7 @@ const ListadoDocentes = () => {
   });
 
   return (
-    <div>
+    <div className='row'>
       <p className='fs-2'>Listado de Docentes</p>
       <div className='row align-items-start'>
 
@@ -89,7 +87,7 @@ const ListadoDocentes = () => {
             </div>
 
         </div>
-        <div className='col-10 table-responsive'><br />
+        <div className='col-10 table-responsive' style={{ maxHeight: '600px'}}><br />
           <table className="table table-dark table-striped table-hover caption-top align-middle">
             <thead>
               <tr>

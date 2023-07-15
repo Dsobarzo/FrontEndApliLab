@@ -39,18 +39,19 @@ const AgregarCarrera = ({ onCarreraAgregada }) => {
   return (
     <div>
       <form>
-      <p className='fs-2 text-center'>AGREGAR CARRERA</p>
+      <h2 className='text-left fs-3' style={{ color: 'white'}} >AGREGAR CARRERA</h2>
         <div className='form-group p-2'>
           <label className='fs-4'>Nombre:</label>
           <input
             type='text'
             className='form-control'
+            style={{ maxWidth: '10px' }}
             value={nombreCarrera}
             onChange={handleNombreCarreraChange}
             maxLength={MAX_CARACTERES}
           />
         </div>
-        <div className='d-grid col-8 mx-auto'>
+        <div className='d-grid col-8 mx-4'>
           <button type='button' className='btn btn-dark mt-5' onClick={handleAgregar}>
             Agregar
           </button>
