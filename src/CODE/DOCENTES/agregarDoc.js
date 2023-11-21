@@ -125,7 +125,7 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
             <option value=''>Seleccionar carrera</option>
             {carreras.map(carrera => (
               <option key={carrera.id} value={carrera.id}>
-                {carrera.id}
+                {carrera.carrera}
               </option>
             ))}
           </select>
