@@ -168,10 +168,9 @@ const ListadoReservas = () => {
           </tbody>
         </table>
       </div>
-      <div className='col-2'>
+      <div className='col-2 table-responsive'>
         <AgregarReserva onReservaAgregada={handleReservaAgregada} />
       </div>
-
     </div>
   );
 };

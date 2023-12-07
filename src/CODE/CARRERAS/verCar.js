@@ -89,7 +89,7 @@ const ListadoCarreras = () => {
 
           </table>
         </div>
-        <div className='col-2'>
+        <div className='col-2 table-responsive'>
           <AgregarCarrera onCarreraAgregada={handleCarreraAgregada} />
         </div>
       </div>

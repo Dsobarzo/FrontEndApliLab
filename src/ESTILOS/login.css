@@ -11,10 +11,10 @@
   align-items: center;
 }
 #contenedorPrincipal{
-  background: #000000cf;  /* fallback para navegadores antiguos */
-  background: -webkit-linear-gradient(to left, #ffffff3c, #000000c6, #000000);  /* Chrome 10-25, Safari 5.1-6 */
+  background: #000000cf;
+  background: -webkit-linear-gradient(to left, #ffffff3c, #000000c6, #000000);
   background: linear-gradient(to left, #fffefe00, #000000b5,#000000e0,#000000e8,
-            #000000ef, #000000); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            #000000ef, #000000);
 }
 .titulo{
   margin: 40px;
@@ -37,7 +37,7 @@
 #login{
   background: linear-gradient(to left, #9a9a9a66, rgba(0, 0, 0, 0.652), rgba(0, 0, 0, 0.652), 
             rgba(0, 0, 0, 0.652), rgba(0, 0, 0, 0.652), rgba(0, 0, 0, 0.652), rgba(0, 0, 0, 0.652),
-            rgba(0, 0, 0, 0.652), #9a9a9a66); /*Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            rgba(0, 0, 0, 0.652), #9a9a9a66);
   border-radius: 25px;
   margin: 5vh 3vw;
   height: 70vh;

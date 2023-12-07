@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
-import Login from '../PAGINAS/login';
-import MenuAdministrador from '../PAGINAS/menu_administrador';
-import MenuDocente from '../PAGINAS/menu_docente';
-import TerminosCondiciones from '../PAGINAS/term_cond';
+import Login from '../VISTAS/login';
+import MenuAdministrador from '../VISTAS/menu_administrador';
+import MenuDocente from '../VISTAS/menu_docente';
+import TerminosCondiciones from '../VISTAS/term_cond';
 import Cookies from 'js-cookie';
 
 function verificarAutenticacion(element, rolesPermitidos) {
@@ -11,10 +11,9 @@ function verificarAutenticacion(element, rolesPermitidos) {
   const rolUsuario = Cookies.get('rolUsuario'); // Obtener el rol del usuario desde las cookies
 
   if (!authToken || !rolesPermitidos.includes(rolUsuario)) {
-    // El usuario no ha iniciado sesión o no tiene el rol adecuado, redirigir al inicio de sesión
+  // El usuario no ha iniciado sesión o no tiene el rol adecuado, redirigir al inicio de sesión
     return <Navigate to="/" replace={true} />;
   }
-
   return element;
 }
 

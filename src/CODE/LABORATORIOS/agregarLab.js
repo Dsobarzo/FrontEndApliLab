@@ -59,47 +59,51 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
   };
 
   return (
-    <div><br/><br/><br/><br/>
-    <h2 className='text-left fs-3' style={{ color: 'white'}} >AGREGAR LABORATORIO</h2>
+    <div style={{ width: '320px'}}>
+      <h2 className='text-center fs-3 my-4' style={{ color: 'white' }} >AGREGAR LABORATORIO</h2>
       <form>
-        <div className='form-group p-2'>
+        <div className='form-group p-2' style={{ width: '100%'}}>
           <label className='fs-4'>Nombre:</label>
           <input
             type='text'
             className='form-control'
-            style={{ maxWidth: '10px' }}
+            style={{ width: '100%' }}
             value={nombre}
             onChange={handleNombreChange}
             maxLength={MAX_CARACTERES_NOMBRE}
           />
         </div>
-        <div className='form-group p-2'>
+        <div className='form-group p-2' style={{ width: '100%'}}>
           <label className='fs-4'>Ubicación:</label>
           <input
             type='text'
             className='form-control'
-            style={{ maxWidth: '10px' }}
+            style={{ width: '100%' }}
             value={ubicacion}
             onChange={handleUbicacionChange}
             maxLength={MAX_CARACTERES_UBICACION}
           />
         </div>
-        <div className='form-group p-2'>
+        <div className='form-group p-2' style={{ width: '100%'}}>
           <label className='fs-4'>Capacidad:</label>
           <input
             type='number'
             className='form-control'
-            style={{ maxWidth: '10px' }}
+            style={{ width: '100%' }}
             value={capacidad}
             onChange={handleCapacidadChange}
             min={0}
             max={Math.pow(10, MAX_DIGITOS_CAPACIDAD) - 1}
           />
         </div>
-        <div className='d-grid col-8 mx-4'>
-        <button type='button' className='btn btn-dark mt-5 ' onClick={handleAgregar}>
-          Agregar
-        </button>
+        <div className='col-8' style={{ textAlign: 'center', width: '100%'}}>
+          <button
+            type='button'
+            className='btn btn-dark'
+            onClick={handleAgregar}
+            >
+            Agregar
+          </button>
         </div>
       </form>
       {alertaVisible && (

@@ -90,7 +90,7 @@ const ModificarLaboratorio = ({ laboratorio, onLaboratorioModificado }) => {
       {modalVisible && (
         <div className="modal my-5" id="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
           <div className="modal-dialog" role="document">
-            <div className="modal-content border border-white" style={{ marginTop: '150px', height: '600px', background: 'linear-gradient(to right, #ffffff, #000000, rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), #000000, #ffffff)' }}>
+            <div className="modal-content border border-white" style={{ marginTop: '150px', height: '600px', background: 'rgb(35, 35, 35)' }}>
               <div className="modal-header">
                 <h5 className="modal-title fs-3" style={{ color: 'white', marginLeft: '55px' }}>MODIFICAR LABORATORIO</h5>
                 <button type="button" className="close" aria-label="Cerrar" style={{ backgroundColor: 'transparent', border: 'none' }} onClick={handleCancelar}>
@@ -143,10 +143,10 @@ const ModificarLaboratorio = ({ laboratorio, onLaboratorioModificado }) => {
                 </div>
               )}
               <div className="modal-footer mx-auto">
-                <button type="button" className="btn btn-dark btn-md m-3 p-2" onClick={handleGuardar}>
+                <button type="button" className="btn btn-dark btn-md m-3 p-2 border-white" onClick={handleGuardar}>
                   Guardar
                 </button>
-                <button type="button" className="btn btn-dark btn-md m-3 p-2" onClick={handleCancelar}>
+                <button type="button" className="btn btn-dark btn-md m-3 p-2 border-white" onClick={handleCancelar}>
                   Cancelar
                 </button>
               </div>

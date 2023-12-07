@@ -4,6 +4,7 @@ import axios from 'axios';
 const AgregarReserva = ({ onReservaAgregada }) => {
   const [laboratorio, setLaboratorio] = useState('');
   const [docente, setDocente] = useState('');
+  const [correoDocente, setCorreoDocente] = useState('');
   const [fecha, setFecha] = useState('');
   const [bloque, setBloque] = useState('');
   const [laboratorios, setLaboratorios] = useState([]);
@@ -16,6 +17,7 @@ const AgregarReserva = ({ onReservaAgregada }) => {
     obtenerDocentes();
   }, []);
 
+  //Obtener listado de laboratorios
   const obtenerLaboratorios = () => {
     axios
       .get('https://apilab-backend-sandbox.up.railway.app/obtenerlaboratorios')
@@ -27,6 +29,7 @@ const AgregarReserva = ({ onReservaAgregada }) => {
       });
   };
 
+  //Obtener listado de Profesores
   const obtenerDocentes = () => {
     axios
       .get('https://apilab-backend-sandbox.up.railway.app/obtenerprofesores')
@@ -44,7 +47,7 @@ const AgregarReserva = ({ onReservaAgregada }) => {
       return;
     }
 
-    // Verificar si la fecha seleccionada es una fecha pasada
+    // Verificacion de fecha pasada
     const fechaActual = new Date();
     const fechaReserva = new Date(fecha);
 
@@ -53,7 +56,7 @@ const AgregarReserva = ({ onReservaAgregada }) => {
       return;
     }
 
-    // Restablecer el mensaje de error si se agregó correctamente
+    // Restablese mendsaje de error
     setErrorFechaPasada(false);
 
     const reserva = {
@@ -64,6 +67,7 @@ const AgregarReserva = ({ onReservaAgregada }) => {
       estado: true,
     };
 
+    //Guardar nueva reserva
     axios
       .post('https://apilab-backend-sandbox.up.railway.app/guardarreserva', reserva)
       .then(response => {
@@ -74,6 +78,30 @@ const AgregarReserva = ({ onReservaAgregada }) => {
         setFecha('');
         setBloque('');
         setAlertaVisible(false);
+
+      // Verificar que haya un docente seleccionado y un correo asociado
+      if (docente && correoDocente) {
+        const docenteSeleccionado = docentes.find((doc) => doc.id === parseInt(docente));
+        const nombreDocente = docenteSeleccionado ? `${docenteSeleccionado.nombre} ${docenteSeleccionado.apellido}` : 'Docente';
+        const laboratorioSeleccionado = laboratorios.find(lab => lab.id_laboratorio === laboratorio);
+        const nombreLaboratorio = laboratorioSeleccionado ? laboratorioSeleccionado.nombre_laboratorio : 'Laboratorio';
+        
+        const mensajeReserva = `
+        Estimado/a ${nombreDocente},
+
+        Le informamos que se ha agregado una reserva de laboratorio en el laboratorio "${nombreLaboratorio}" de la Universidad de Magallanes a su nombre.
+        Para comprobar los datos de su reserva, puede ingresar al siguiente link:
+        <a href="https://frontendaplilab-production.up.railway.app/">https://frontendaplilab-production.up.railway.app/</a>
+
+        Gracias,
+        Sistema de Reserva de Laboratorios
+        `;
+        enviarNotificacionPorCorreo([correoDocente], 'Nueva Reserva de Laboratorio', mensajeReserva);
+      } else {
+        // En el de que no se haya seleccionado un docente
+        console.warn('Por favor, seleccione un docente antes de agendar la reserva.');
+      }
+
       })
       .catch(error => {
         console.error('Error al agregar la reserva:', error);
@@ -85,7 +113,15 @@ const AgregarReserva = ({ onReservaAgregada }) => {
   };
 
   const handleDocenteChange = e => {
-    setDocente(e.target.value);
+    const docenteId = e.target.value;
+    setDocente(docenteId);
+    
+    const docenteSeleccionado = docentes.find((docente) => docente.id === parseInt(docenteId));
+    if (docenteSeleccionado) {
+      setCorreoDocente(docenteSeleccionado.email);
+    } else {
+      setCorreoDocente('');
+    }
   };
 
   const handleFechaChange = e => {
@@ -96,11 +132,32 @@ const AgregarReserva = ({ onReservaAgregada }) => {
     setBloque(e.target.value);
   };
 
+  async function enviarNotificacionPorCorreo(destinatarios, asunto, mensaje) {
+    try {
+      // Endpoint Notificaciones
+      const urlServicioExterno = 'https://mailnotification.onrender.com/v1/notificacion';
+  
+      // Datos del correo electrónico
+      const datosCorreo = {
+        toUser: destinatarios,
+        subject: asunto,
+        message: mensaje,
+      };
+  
+      // Solicitud POST
+      const respuesta = await axios.post(urlServicioExterno, datosCorreo);
+  
+    } catch (error) {
+      // Manejar errores en caso de que la solicitud falle
+      console.error('Error al enviar la notificación por correo electrónico:', error.message);
+    }
+  }
+
   return (
     <div>
       <form>
         <br />
-        <h2 className='text-left fs-3' style={{ color: 'white' }}>AGREGAR LABORATORIO</h2>
+        <h2 className='text-left fs-3' style={{ color: 'white' }}>AGREGAR RESERVA</h2>
         <div className='form-group p-2'>
           <label className='fs-4'>Laboratorio:</label>
           <select
@@ -128,7 +185,7 @@ const AgregarReserva = ({ onReservaAgregada }) => {
             <option value=''>Seleccion docente</option>
             {docentes.map(docente => (
               <option key={docente.id} value={docente.id}>
-                {docente.apellido}
+                {docente.nombre + " " + docente.apellido}
               </option>
             ))}
           </select>

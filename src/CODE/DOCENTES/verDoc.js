@@ -117,7 +117,7 @@ const ListadoDocentes = () => {
             </tbody>
           </table>
         </div>
-        <div className='col-2'>
+        <div className='col-2 table-responsive'>
           <AgregarDocente onDocenteAgregado={handleDocenteAgregado} />
         </div>
       </div>

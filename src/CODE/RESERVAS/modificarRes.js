@@ -4,6 +4,7 @@ import axios from 'axios';
 const ModificarReserva = ({ reserva, onReservaModificada }) => {
   const [laboratorios, setLaboratorios] = useState([]);
   const [docentes, setDocentes] = useState([]);
+  const [correoDocente, setCorreoDocente] = useState('');
   const [laboratorio, setLaboratorio] = useState(reserva.id_laboratorios || '');
   const [docente, setDocente] = useState(reserva.id_profesores || '');
   const [fecha, setFecha] = useState(reserva.fecha_reserva);
@@ -81,6 +82,30 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
         cerrarModal();
         resetForm();
         onReservaModificada();
+
+      // Verificar que haya un docente seleccionado y un correo asociado a el
+      if (docente && correoDocente) {
+        const docenteSeleccionado = docentes.find((doc) => doc.id === parseInt(docente));
+        const nombreDocente = docenteSeleccionado ? `${docenteSeleccionado.nombre} ${docenteSeleccionado.apellido}` : 'Docente';
+        const laboratorioSeleccionado = laboratorios.find(lab => lab.id_laboratorio === laboratorio);
+        const nombreLaboratorio = laboratorioSeleccionado ? laboratorioSeleccionado.nombre_laboratorio : 'Laboratorio';
+        
+        const mensajeReserva = `
+        Estimado/a ${nombreDocente},
+
+        Le informamos que se ha modificado la reserva de laboratorio "${nombreLaboratorio}" a su nombre.
+        Para comprobar los cambios realizados en su reserva, puede ingresar al siguiente link:
+        <a href="https://frontendaplilab-production.up.railway.app/">https://frontendaplilab-production.up.railway.app/</a>
+
+        Gracias,
+        Sistema de Reserva de Laboratorios
+        `;
+        enviarNotificacionPorCorreo([correoDocente], 'Nueva Reserva de Laboratorio', mensajeReserva);
+      } else {
+        // En el de que no se haya seleccionado un docente
+        console.warn('Por favor, seleccione un docente antes de agendar la reserva.');
+      }
+
       })
       .catch(error => {
         console.error('Error al modificar la reserva:', error);
@@ -110,7 +135,15 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
   };
 
   const handleDocenteChange = e => {
-    setDocente(e.target.value);
+    const docenteId = e.target.value;
+    setDocente(docenteId);
+    
+    const docenteSeleccionado = docentes.find((docente) => docente.id === parseInt(docenteId));
+    if (docenteSeleccionado) {
+      setCorreoDocente(docenteSeleccionado.email);
+    } else {
+      setCorreoDocente('');
+    }
   };
 
   const handleFechaChange = e => {
@@ -126,6 +159,27 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
     setEstadoReserva(e.target.value === 'true');
   };
 
+  async function enviarNotificacionPorCorreo(destinatarios, asunto, mensaje) {
+    try {
+      // Endpoint Notificaciones
+      const urlServicioExterno = 'https://mailnotification.onrender.com/v1/notificacion';
+  
+      // Datos del correo electrónico
+      const datosCorreo = {
+        toUser: destinatarios,
+        subject: asunto,
+        message: mensaje,
+      };
+  
+      // Solicitud POST
+      const respuesta = await axios.post(urlServicioExterno, datosCorreo);
+  
+    } catch (error) {
+      // Manejar errores en caso de que la solicitud falle
+      console.error('Error al enviar la notificación por correo electrónico:', error.message);
+    }
+  }
+
   return (
     <div>
       <button className="btn btn-warning btn-sm m-1 p-2" onClick={handleModificar}>
@@ -134,7 +188,7 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
       {modalVisible && (
         <div className="modal my-5" id="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
           <div className="modal-dialog" role="document">
-          <div className="modal-content border border-white" style={{ height: '800px', background: 'linear-gradient(to right, #ffffff, #000000, rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), #000000, #ffffff)' }}>
+          <div className="modal-content border border-white" style={{ height: '800px', background: 'rgb(35, 35, 35)' }}>
               <div className="modal-header">
                 <h5 className="modal-title fs-3" style={{ color: 'white', marginLeft: '100px' }}>Modificar Reserva</h5>
                 <button type="button" className="close" aria-label="Cerrar" style={{ backgroundColor: 'transparent', border: 'none' }} onClick={handleCancelar}>
@@ -160,7 +214,7 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
                       <select className="form-control" value={docente} onChange={handleDocenteChange}>
                         <option value="">Seleccione un docente</option>
                         {docentes.map(docente => (
-                          <option key={docente.id} value={docente.id}>{docente.nombre}</option>
+                          <option key={docente.id} value={docente.id}>{docente.nombre + " " + docente.apellido}</option>
                         ))}
                       </select>
                     </div>
@@ -225,10 +279,10 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
                 </div>
               )}
               <div className="modal-footer mx-auto">
-                <button type="button" className="btn btn-dark btn-md m-1 p-2" onClick={handleGuardar}>
+                <button type="button" className="btn btn-dark btn-md m-1 p-2 border-white" onClick={handleGuardar}>
                   Guardar
                 </button>
-                <button type="button" className="btn btn-dark btn-md m-1 p-2" onClick={handleCancelar}>
+                <button type="button" className="btn btn-dark btn-md m-1 p-2 border-white" onClick={handleCancelar}>
                   Cancelar
                 </button>
               </div>

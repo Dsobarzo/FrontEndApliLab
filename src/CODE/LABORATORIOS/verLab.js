@@ -46,16 +46,17 @@ const ListadoLaboratorios = () => {
   );
 
   return (
-    <div className='row'>
-      <p className='fs-2'>Listado de Laboratorios</p>
-      <div className='col-10 table-responsive'>
+    <div style={{ padding: '1%' }}>
+      <h2 className='fs-2' style={{ color: 'white' }}>Listado de Laboratorios</h2>
+      <div>
         <div className='col-3'>
-          <label htmlFor='filtroLaboratorio' className='fs-4 text-center'>Filtrar por nombre:</label>
+          <label htmlFor='filtroLaboratorio' className='fs-4 text-center' style={{ minWidth: '190px' }}>Buscar por nombre:</label>
           <select
             id='filtroLaboratorio'
             className='form-select fs-6'
             value={filtroLaboratorio}
             onChange={handleFiltroLaboratorioChange}
+            style={{ minWidth: '200px' }}
           >
             <option value=''>Todos los laboratorios</option>
             {laboratorios.map(laboratorio => (
@@ -65,37 +66,41 @@ const ListadoLaboratorios = () => {
             ))}
           </select><br />
         </div>
-        <div className='table-responsive' style={{ maxHeight: '600px'}}>
-          <table className="table table-dark table-striped table-hover caption-top align-middle">
-            <thead>
-              <tr>
-                <th className="w-50">Nombre</th>
-                <th className="w-25 text-center">Ubicación</th>
-                <th className="w-25 text-center">Capacidad</th>
-                <th className="w-25 text-center">Modificar</th>
-                <th className="w-25 text-center">Eliminar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {laboratoriosFiltrados.map(laboratorio => (
-                <tr key={laboratorio.id}>
-                  <td>{laboratorio.nombre}</td>
-                  <td className='text-center'>{laboratorio.ubicacion}</td>
-                  <td className='text-center'>{laboratorio.capacidad}</td>
-                  <td className='text-center'>
-                    <ModificarLaboratorio laboratorio={laboratorio} onLaboratorioModificado={handleLaboratorioModificado} />
-                  </td>
-                  <td className='text-center'>
-                    <EliminarLaboratorio laboratorioId={laboratorio.id} onLaboratorioEliminado={handleLaboratorioEliminado} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div className='col-2'>
-        <AgregarLaboratorio onLaboratorioAgregado={handleLaboratorioAgregado} />
+        <form style={{ display: 'flex', flexWrap: 'wrap' }}>
+          <div className='table-responsive' style={{ width: '70%', minWidth: '310px' }}>
+            <div style={{ maxHeight: '600px',  margin: '10px 10px 10px 0px' }}>
+              <table className="table table-dark table-striped table-hover caption-top align-middle">
+                <thead>
+                  <tr>
+                    <th className="w-25">Nombre</th>
+                    <th className="w-25 text-center">Ubicación</th>
+                    <th className="w-25 text-center">Capacidad</th>
+                    <th className="w-25 text-center">Modificar</th>
+                    <th className="w-25 text-center">Eliminar</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {laboratoriosFiltrados.map(laboratorio => (
+                    <tr key={laboratorio.id}>
+                      <td>{laboratorio.nombre}</td>
+                      <td className='text-center'>{laboratorio.ubicacion}</td>
+                      <td className='text-center'>{laboratorio.capacidad}</td>
+                      <td className='text-center'>
+                        <ModificarLaboratorio laboratorio={laboratorio} onLaboratorioModificado={handleLaboratorioModificado} />
+                      </td>
+                      <td className='text-center'>
+                        <EliminarLaboratorio laboratorioId={laboratorio.id} onLaboratorioEliminado={handleLaboratorioEliminado} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div style={{ flex: '1 0 300px' }}>
+            <AgregarLaboratorio onLaboratorioAgregado={handleLaboratorioAgregado} />
+          </div>
+        </form>
       </div>
     </div>
   );
