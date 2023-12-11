@@ -1,24 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { obtenerDocentes, obtenerCarreras, actualizarCarreras, actualizarDocentes } from '../actualizarDatos.js';
 import axios from 'axios';
 
 const EliminarCarrera = ({ carreraId, onCarreraEliminada }) => {
-  const [id, setId] = useState(carreraId);
+
+  actualizarCarreras();
+  obtenerCarreras();
+  actualizarDocentes();
+  obtenerDocentes();
+
+  const [tieneDocentes, setTieneDocentes] = useState(false);
+  const [id] = useState(carreraId);
+
+  useEffect(() => {
+    const verificarDocentes = async () => {
+      try {
+        // Obtener docentes
+        const docentesResponse = await axios.get('https://apilab-backend-sandbox.up.railway.app/obtenerprofesores');
+
+        // Verificar si la carrera tiene docentes asociados
+        const carreraConDocentes = docentesResponse.data.some(docente => docente.id_carrera === carreraId);
+        setTieneDocentes(carreraConDocentes);
+      } catch (error) {
+        console.error(`Error al verificar docentes para la carrera ${carreraId}:`, error);
+      }
+    };
+
+    if (carreraId) {
+      verificarDocentes();
+    }
+  }, [carreraId]);
 
   const eliminarCarrera = () => {
-    const confirmacion = window.confirm('¿Estás seguro de que deseas eliminar esta carrera?');
+    if (!tieneDocentes) {
+      const confirmacion = window.confirm('¿Estás seguro de que deseas eliminar esta carrera?');
 
-    if (confirmacion) {
-      axios
-        .delete(`https://apilab-backend-sandbox.up.railway.app/borrarcarrera/${id}`)
-        .then(response => {
-          // La carrera se eliminó exitosamente
-          console.log('Carrera eliminada:', response.data);
-          onCarreraEliminada(); // Actualizar la lista de carreras
-        })
-        .catch(error => {
-          // Ocurrió un error al eliminar la carrera
-          console.error('Error al eliminar la carrera:', error);
-        });
+      if (confirmacion) {
+        axios
+          .delete(`https://apilab-backend-sandbox.up.railway.app/borrarcarrera/${id}`)
+          .then(response => {
+            console.log('Carrera eliminada:', response.data);
+            onCarreraEliminada(); // Actualizar la lista de carreras
+          })
+          .catch(error => {
+            console.error('Error al eliminar la carrera:', error);
+          });
+      }
+    } else {
+      alert('La carrera no se puede eliminar, porque tiene docentes asociados.');
     }
   };
 
@@ -32,4 +61,3 @@ const EliminarCarrera = ({ carreraId, onCarreraEliminada }) => {
 };
 
 export default EliminarCarrera;
-

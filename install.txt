@@ -13,13 +13,15 @@ npm install js-cookie (tokens)
 npm install md5 (encriptacion)
 npm install axios (conección base de datos)
 npm install http-proxy-middleware --save (permitir CORS en las notificaciones)
+npm install --save-dev @babel/plugin-proposal-private-property-in-object
+
 
 
 git:
 
 git add .
 git status
-git commit -m  "version 2 06-12-23"
+git commit -m  "version 3 11-12-23"
 git push
 
 https://frontendaplilab-production.up.railway.app/

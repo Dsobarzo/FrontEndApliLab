@@ -69,22 +69,23 @@ class Login extends React.Component {
       <div className="contenedor">
         <div className="container m-0" id='contenedorPrincipal'>
           <div className="row justify-content-center align-items-center">
-            <div className="col-lg-4 col-md-8 col-sm-10">
-              <div className="columna">
-                <div className="titulo mb-4">
-                  <h2 className='fs-1 mb-5'>UNIVERSIDAD DE MAGALLANES</h2>
+            <div className="col-lg-4 col-md-8 col-sm-10 ">
+              <div className='detalle'>
+                <div className="columna">
+                  <div className="titulo mb-">
+                    <h2 className='fs-2 mb-5'>UNIVERSIDAD DE MAGALLANES</h2>
+                  </div>
+                  <h2 className='fs-3 mt-3' style={{ color: "white" }}>Gestión de reservas de laboratorios</h2>
+                  <br /><br />
+                  <p className="fs-5 text-start">
+                    Esta es una herramienta útil y eficaz para optimizar tus procesos de reserva.<br /><br />
+                    ¡Disfruta de la facilidad y conveniencia que te brindamos y no dudes en comunicarte con nosotros si necesitas ayuda!
+                  </p>
                 </div>
-                <h2 className='mt-3' style={{ color: "white" }}>Gestión de reservas de laboratorios</h2>
-                <br/><br />
-                <p className="fs-4 text-start">
-                Esta es una herramienta útil y eficaz para optimizar tus procesos de reserva.<br/><br/>
-                ¡Disfruta de la facilidad y conveniencia que te brindamos y no dudes en comunicarte con nosotros si necesitas ayuda!
-                </p>
               </div>
             </div>
-            <div className="col-lg-4 col-md-6 col-sm-8">
+            <div className="col-lg-4 col-md-6 col-sm-8 px-0">
               <div className="columna" id='login'>
-                
                 <label>Usuario</label>
                 <br />
                 <input
@@ -108,9 +109,13 @@ class Login extends React.Component {
                 <button className="btn btn-primary" onClick={this.handleSubmit}>
                   Iniciar Sesión
                 </button>
-                <div className='text-center mb-5'>
-                  {error && <p>{error}</p>}
-                  <Link to="/term_cond">Términos y Condiciones</Link>
+                <div className='text-center'>
+                  <div className='error'>
+                    {error && <p>{error}</p>}
+                  </div>
+                  <div className='terminos'>
+                    <Link to="/term_cond">Términos y Condiciones</Link>
+                  </div>
                 </div>
               </div>
             </div>

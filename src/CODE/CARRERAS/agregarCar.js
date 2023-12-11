@@ -5,6 +5,7 @@ const AgregarCarrera = ({ onCarreraAgregada }) => {
   const [nombreCarrera, setNombreCarrera] = useState('');
 
   const MAX_CARACTERES = 30;
+
   const [alertaVisible, setAlertaVisible] = useState(false);
 
   const handleAgregar = () => {
@@ -17,12 +18,11 @@ const AgregarCarrera = ({ onCarreraAgregada }) => {
       carrera: nombreCarrera
     };
 
-
     axios
       .post('https://apilab-backend-sandbox.up.railway.app/guardarcarrera', carrera)
       .then(response => {
         console.log('Carrera agregada:', response.data);
-        onCarreraAgregada();
+        onCarreraAgregada(); // Actualiza los datos
         setNombreCarrera('');
         setAlertaVisible(false);
       })

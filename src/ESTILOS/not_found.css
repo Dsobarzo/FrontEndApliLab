@@ -1,0 +1,7 @@
+.imag{
+    background-image: url("../IMAG/404.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+    width: 100vw;
+    min-height: 100vh;
+}

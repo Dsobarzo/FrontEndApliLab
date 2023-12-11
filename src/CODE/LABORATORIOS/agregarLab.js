@@ -9,6 +9,7 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
   const MAX_CARACTERES_NOMBRE = 30;
   const MAX_CARACTERES_UBICACION = 30;
   const MAX_DIGITOS_CAPACIDAD = 3;
+
   const [alertaVisible, setAlertaVisible] = useState(false);
 
   const handleAgregar = () => {
@@ -16,18 +17,18 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
       setAlertaVisible(true);
       return;
     }
-
+  
     const laboratorio = {
       nombre: nombre,
       ubicacion: ubicacion,
       capacidad: parseInt(capacidad)
     };
-
+  
     axios
       .post('https://apilab-backend-sandbox.up.railway.app/guardarlaboratorio', laboratorio)
       .then(response => {
         console.log('Laboratorio agregado:', response.data);
-        onLaboratorioAgregado();
+        onLaboratorioAgregado(); // Actualiza los datos
         setNombre('');
         setUbicacion('');
         setCapacidad('');
@@ -121,4 +122,3 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
 };
 
 export default AgregarLaboratorio;
-

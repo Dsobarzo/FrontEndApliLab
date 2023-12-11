@@ -38,9 +38,10 @@ const ModificarLaboratorio = ({ laboratorio, onLaboratorioModificado }) => {
       .put(`https://apilab-backend-sandbox.up.railway.app/modificarlaboratorio/${laboratorio.id}`, laboratorioModificado)
       .then(response => {
         console.log('Laboratorio modificado:', response.data);
+        onLaboratorioModificado(); // Actualiza los datos
         cerrarModal();
         resetForm();
-        onLaboratorioModificado();
+
       })
       .catch(error => {
         console.error('Error al modificar el laboratorio:', error);

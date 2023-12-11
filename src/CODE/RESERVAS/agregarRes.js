@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { obtenerDocentes, obtenerLaboratorios, actualizarReservas } from '../actualizarDatos.js';
 import axios from 'axios';
 
 const AgregarReserva = ({ onReservaAgregada }) => {
   const [laboratorio, setLaboratorio] = useState('');
   const [docente, setDocente] = useState('');
-  const [correoDocente, setCorreoDocente] = useState('');
   const [fecha, setFecha] = useState('');
   const [bloque, setBloque] = useState('');
   const [laboratorios, setLaboratorios] = useState([]);
@@ -13,35 +13,31 @@ const AgregarReserva = ({ onReservaAgregada }) => {
   const [errorFechaPasada, setErrorFechaPasada] = useState(false);
 
   useEffect(() => {
-    obtenerLaboratorios();
-    obtenerDocentes();
+    obtenerDatosLaboratorios();
+    obtenerDatosDocentes();
   }, []);
 
   //Obtener listado de laboratorios
-  const obtenerLaboratorios = () => {
-    axios
-      .get('https://apilab-backend-sandbox.up.railway.app/obtenerlaboratorios')
-      .then(response => {
-        setLaboratorios(response.data);
-      })
-      .catch(error => {
-        console.error('Error al obtener los laboratorios:', error);
-      });
+  const obtenerDatosLaboratorios = async () => {
+    try {
+      const laboratoriosData = await obtenerLaboratorios();
+      setLaboratorios(laboratoriosData);
+    } catch (error) {
+      console.error('//Error al obtener los laboratorios:', error);
+    }
   };
 
   //Obtener listado de Profesores
-  const obtenerDocentes = () => {
-    axios
-      .get('https://apilab-backend-sandbox.up.railway.app/obtenerprofesores')
-      .then(response => {
-        setDocentes(response.data);
-      })
-      .catch(error => {
-        console.error('Error al obtener los docentes:', error);
-      });
+  const obtenerDatosDocentes = async () => {
+    try {
+      const docentesData = await obtenerDocentes();
+      setDocentes(docentesData);
+    } catch (error) {
+      console.error('//Error al obtener los docentes:', error);
+    }
   };
 
-  const handleAgregar = () => {
+  const handleReservaAgregada = () => {
     if (!laboratorio || !docente || !fecha || !bloque) {
       setAlertaVisible(true);
       return;
@@ -72,31 +68,49 @@ const AgregarReserva = ({ onReservaAgregada }) => {
       .post('https://apilab-backend-sandbox.up.railway.app/guardarreserva', reserva)
       .then(response => {
         console.log('Reserva agregada:', response.data);
-        onReservaAgregada();
+        onReservaAgregada(); // Actualiza los datos
+        actualizarReservas();
         setLaboratorio('');
         setDocente('');
         setFecha('');
         setBloque('');
         setAlertaVisible(false);
 
-      // Verificar que haya un docente seleccionado y un correo asociado
-      if (docente && correoDocente) {
         const docenteSeleccionado = docentes.find((doc) => doc.id === parseInt(docente));
-        const nombreDocente = docenteSeleccionado ? `${docenteSeleccionado.nombre} ${docenteSeleccionado.apellido}` : 'Docente';
-        const laboratorioSeleccionado = laboratorios.find(lab => lab.id_laboratorio === laboratorio);
-        const nombreLaboratorio = laboratorioSeleccionado ? laboratorioSeleccionado.nombre_laboratorio : 'Laboratorio';
-        
+
+      // Verificar que haya un docente seleccionado y un correo asociado
+      if (docenteSeleccionado) {
+
+        const nombreDocente = `${docenteSeleccionado.nombre} ${docenteSeleccionado.apellido}`;
+        const laboratorioSeleccionado = laboratorios.find((lab) => lab.id === parseInt(laboratorio));
+
+        let estadoNuevo = '';
+        const estado = true;
+
+        if (estado) {
+          estadoNuevo = 'Activo';
+        } else {
+          estadoNuevo = 'Inactivo';
+        }
+
         const mensajeReserva = `
         Estimado/a ${nombreDocente},
 
-        Le informamos que se ha agregado una reserva de laboratorio en el laboratorio "${nombreLaboratorio}" de la Universidad de Magallanes a su nombre.
+        Le informamos que se ha agregado una reserva de laboratorio con el siguiente detalle:
+        
+        - Nombre del Docente: ${nombreDocente}
+        - Nombre del Laboratorio: ${laboratorioSeleccionado.nombre}
+        - Fecha de la Reserva: ${fecha}
+        - Bloque: ${bloque}
+        - Estado de la Reserva: ${estadoNuevo}
+
         Para comprobar los datos de su reserva, puede ingresar al siguiente link:
-        <a href="https://frontendaplilab-production.up.railway.app/">https://frontendaplilab-production.up.railway.app/</a>
+        https://frontendaplilab-production.up.railway.app/
 
         Gracias,
         Sistema de Reserva de Laboratorios
         `;
-        enviarNotificacionPorCorreo([correoDocente], 'Nueva Reserva de Laboratorio', mensajeReserva);
+        enviarNotificacionPorCorreo([docenteSeleccionado.email], 'Nueva Reserva de Laboratorio', mensajeReserva);
       } else {
         // En el de que no se haya seleccionado un docente
         console.warn('Por favor, seleccione un docente antes de agendar la reserva.');
@@ -109,6 +123,7 @@ const AgregarReserva = ({ onReservaAgregada }) => {
   };
 
   const handleLaboratorioChange = e => {
+    obtenerLaboratorios();
     setLaboratorio(e.target.value);
   };
 
@@ -116,12 +131,6 @@ const AgregarReserva = ({ onReservaAgregada }) => {
     const docenteId = e.target.value;
     setDocente(docenteId);
     
-    const docenteSeleccionado = docentes.find((docente) => docente.id === parseInt(docenteId));
-    if (docenteSeleccionado) {
-      setCorreoDocente(docenteSeleccionado.email);
-    } else {
-      setCorreoDocente('');
-    }
   };
 
   const handleFechaChange = e => {
@@ -146,6 +155,7 @@ const AgregarReserva = ({ onReservaAgregada }) => {
   
       // Solicitud POST
       const respuesta = await axios.post(urlServicioExterno, datosCorreo);
+      console.log(respuesta)
   
     } catch (error) {
       // Manejar errores en caso de que la solicitud falle
@@ -164,6 +174,7 @@ const AgregarReserva = ({ onReservaAgregada }) => {
             className='form-control'
             style={{ maxWidth: '180px' }}
             value={laboratorio}
+            onClick={obtenerDatosLaboratorios}
             onChange={handleLaboratorioChange}
           >
             <option value=''>Seleccion laboratorio</option>
@@ -180,6 +191,7 @@ const AgregarReserva = ({ onReservaAgregada }) => {
           className='form-control'  
           style={{ maxWidth: '180px' }}
           value={docente} 
+          onClick={obtenerDatosDocentes}
           onChange={handleDocenteChange}
           >
             <option value=''>Seleccion docente</option>
@@ -217,7 +229,7 @@ const AgregarReserva = ({ onReservaAgregada }) => {
           onChange={handleFechaChange} />
         </div>
         <div className='d-grid col-8 mx-4'>
-          <button type='button' className='btn btn-dark mt-5' onClick={handleAgregar}>
+          <button type='button' className='btn btn-dark mt-5' onClick={handleReservaAgregada}>
             Agregar
           </button>
         </div>

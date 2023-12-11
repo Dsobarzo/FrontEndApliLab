@@ -31,9 +31,9 @@ const ModificarCarrera = ({ carrera, onCarreraModificada }) => {
       .put(`https://apilab-backend-sandbox.up.railway.app/modificarcarrera/${carrera.id}`, carreraModificada)
       .then(response => {
         console.log('Carrera modificada:', response.data);
+        onCarreraModificada(); // Actualiza los datos
         cerrarModal();
         resetForm();
-        onCarreraModificada();
       })
       .catch(error => {
         console.error('Error al modificar la carrera:', error);

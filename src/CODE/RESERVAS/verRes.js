@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { obtenerReservas, obtenerLaboratorios, obtenerDocentes, actualizarReservas } from '../actualizarDatos.js';
 import AgregarReserva from './agregarRes';
 import ModificarReserva from './modificarRes';
 
@@ -12,50 +12,58 @@ const ListadoReservas = () => {
   const [filtroEstado, setFiltroEstado] = useState('');
 
   useEffect(() => {
-    obtenerReservas();
-    obtenerLaboratorios();
-    obtenerDocentes();
+    obtenerDatosReservas();
+    obtenerDatosLaboratorios();
+    obtenerDatosDocentes();
   }, []);
 
-  const obtenerReservas = () => {
-    axios
-      .get('https://apilab-backend-sandbox.up.railway.app/obtenerreservas')
-      .then(response => {
-        setReservas(response.data);
-      })
-      .catch(error => {
-        console.error('Error al obtener las reservas:', error);
-      });
+  const obtenerDatosReservas = async () => {
+    try {
+      const reservasData = await obtenerReservas();
+      setReservas(reservasData);
+    } catch (error) {
+      console.error('//Error al obtener las reservas:', error);
+    }
   };
 
-  const obtenerLaboratorios = () => {
-    axios
-      .get('https://apilab-backend-sandbox.up.railway.app/obtenerlaboratorios')
-      .then(response => {
-        setLaboratorios(response.data);
-      })
-      .catch(error => {
-        console.error('Error al obtener los laboratorios:', error);
-      });
+  const obtenerDatosLaboratorios = async () => {
+    try {
+      const laboratoriosData = await obtenerLaboratorios();
+      setLaboratorios(laboratoriosData);
+    } catch (error) {
+      console.error('//Error al obtener los laboratorios:', error);
+    }
   };
 
-  const obtenerDocentes = () => {
-    axios
-      .get('https://apilab-backend-sandbox.up.railway.app/obtenerprofesores')
-      .then(response => {
-        setDocentes(response.data);
-      })
-      .catch(error => {
-        console.error('Error al obtener los docentes:', error);
-      });
+  const obtenerDatosDocentes = async () => {
+    try {
+      const docentesData = await obtenerDocentes();
+      setDocentes(docentesData);
+    } catch (error) {
+      console.error('//Error al obtener los docentes:', error);
+    }
   };
 
-  const handleReservaModificada = () => {
-    obtenerReservas();
+  const handleReservaModificada = async () => {
+    try {
+      await actualizarReservas();
+      obtenerDatosReservas();
+      obtenerDatosLaboratorios();
+      obtenerDatosDocentes();
+    } catch (error) {
+      console.error('Error al modificar la reserva:', error);
+    }
   };
 
-  const handleReservaAgregada = () => {
-    obtenerReservas();
+  const handleReservaAgregada = async () => {
+    try {
+      await actualizarReservas();
+      obtenerDatosReservas();
+      obtenerDatosLaboratorios();
+      obtenerDatosDocentes();
+    } catch (error) {
+      console.error('Error al agregar la reserva:', error);
+    }
   };
 
   const handleFiltroBusquedaChange = (e) => {

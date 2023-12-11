@@ -4,6 +4,7 @@ import Login from '../VISTAS/login';
 import MenuAdministrador from '../VISTAS/menu_administrador';
 import MenuDocente from '../VISTAS/menu_docente';
 import TerminosCondiciones from '../VISTAS/term_cond';
+import NotFound from '../VISTAS/not_found';
 import Cookies from 'js-cookie';
 
 function verificarAutenticacion(element, rolesPermitidos) {
@@ -33,6 +34,9 @@ function Rutas() {
         />
 
         <Route path="/term_cond" element={<TerminosCondiciones />} />
+
+        <Route path="*" element={<NotFound />} />
+
       </Routes>
     </BrowserRouter>
   );

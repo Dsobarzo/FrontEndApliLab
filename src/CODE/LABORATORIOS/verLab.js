@@ -1,40 +1,51 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { obtenerLaboratorios, actualizarLaboratorios } from '../actualizarDatos.js';
 import EliminarLaboratorio from './eliminarLab';
 import AgregarLaboratorio from './agregarLab';
 import ModificarLaboratorio from './modificarLab';
-
 
 const ListadoLaboratorios = () => {
   const [laboratorios, setLaboratorios] = useState([]);
   const [filtroLaboratorio, setFiltroLaboratorio] = useState('');
 
   useEffect(() => {
-    obtenerLaboratorios();
+    obtenerDatos();
   }, []);
 
-  const obtenerLaboratorios = () => {
-    axios
-      .get('https://apilab-backend-sandbox.up.railway.app/obtenerlaboratorios')
-      .then(response => {
-        const laboratoriosOrdenados = response.data.sort((a, b) => a.nombre.localeCompare(b.nombre));
-        setLaboratorios(laboratoriosOrdenados);
-      })
-      .catch(error => {
-        console.error('Error al obtener los laboratorios:', error);
-      });
+  const obtenerDatos = async () => {
+    try {
+      const laboratoriosData = await obtenerLaboratorios();
+      setLaboratorios(laboratoriosData);
+    } catch (error) {
+      console.error('//Error al obtener los laboratorios:', error);
+    }
   };
 
-  const handleLaboratorioModificado = () => {
-    obtenerLaboratorios();
+  const handleLaboratorioModificado = async () => {
+    try {
+      await actualizarLaboratorios();
+      obtenerDatos();
+    } catch (error) {
+      console.error('Error al actualizar los laboratorios:', error);
+    }
   };
 
-  const handleLaboratorioEliminado = () => {
-    obtenerLaboratorios();
+  const handleLaboratorioEliminado = async () => {
+    try {
+      await actualizarLaboratorios();
+      obtenerDatos();
+    } catch (error) {
+      console.error('Error al actualizar los laboratorios:', error);
+    }
   };
 
-  const handleLaboratorioAgregado = () => {
-    obtenerLaboratorios();
+  const handleLaboratorioAgregado = async () => {
+    try {
+      await actualizarLaboratorios();
+      obtenerDatos();
+    } catch (error) {
+      console.error('Error al actualizar los laboratorios:', error);
+    }
   };
 
   const handleFiltroLaboratorioChange = (e) => {
@@ -66,9 +77,9 @@ const ListadoLaboratorios = () => {
             ))}
           </select><br />
         </div>
-        <form style={{ display: 'flex', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
           <div className='table-responsive' style={{ width: '70%', minWidth: '310px' }}>
-            <div style={{ maxHeight: '600px',  margin: '10px 10px 10px 0px' }}>
+            <div style={{ maxHeight: '600px', margin: '10px 10px 10px 0px' }}>
               <table className="table table-dark table-striped table-hover caption-top align-middle">
                 <thead>
                   <tr>
@@ -100,7 +111,7 @@ const ListadoLaboratorios = () => {
           <div style={{ flex: '1 0 300px' }}>
             <AgregarLaboratorio onLaboratorioAgregado={handleLaboratorioAgregado} />
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

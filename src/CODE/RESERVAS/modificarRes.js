@@ -4,7 +4,6 @@ import axios from 'axios';
 const ModificarReserva = ({ reserva, onReservaModificada }) => {
   const [laboratorios, setLaboratorios] = useState([]);
   const [docentes, setDocentes] = useState([]);
-  const [correoDocente, setCorreoDocente] = useState('');
   const [laboratorio, setLaboratorio] = useState(reserva.id_laboratorios || '');
   const [docente, setDocente] = useState(reserva.id_profesores || '');
   const [fecha, setFecha] = useState(reserva.fecha_reserva);
@@ -15,6 +14,15 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
   const [alertaFechaPasada, setAlertaFechaPasada] = useState(false);
 
   const MAX_CARACTERES_FECHA = 10;
+
+  const [datosActuales, setDatosActuales] = useState({
+    docenteActual: '',
+    laboratorioActual: '',
+    fechaAct: '',
+    bloqueActual: '',
+    estadoActual: false,
+    emailDocenteOriginal: '',
+  });
 
   useEffect(() => {
     obtenerLaboratorios();
@@ -45,6 +53,24 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
 
   const handleModificar = () => {
     abrirModal();
+    guardarDatosActuales();
+  };
+
+  const guardarDatosActuales = () => {
+    const nomDoc = docentes.find((doc) => doc.id === parseInt(docente));
+    const emailDocente = nomDoc ? nomDoc.email : '';
+
+    const docenteAntes = nomDoc ? `${nomDoc.nombre} ${nomDoc.apellido}` : '';
+    const laboratorioAntes = laboratorios.find((lab) => lab.id === laboratorio);
+
+    setDatosActuales({
+      docenteActual: docenteAntes,
+      laboratorioActual: laboratorioAntes ? laboratorioAntes.nombre : '<LaboratorioAntes>',
+      fechaAct: fecha,
+      bloqueActual: bloque,
+      estadoActual: estadoReserva,
+      emailDocenteOriginal: emailDocente, // Almacena el email original
+    });
   };
 
   const handleCancelar = () => {
@@ -52,7 +78,8 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
     resetForm();
   };
 
-  const handleGuardar = () => {
+  const handleGuardar = async () => {
+
     if (!laboratorio || !docente || !fecha || !bloque) {
       setAlertaVisible(true);
       return;
@@ -83,28 +110,114 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
         resetForm();
         onReservaModificada();
 
-      // Verificar que haya un docente seleccionado y un correo asociado a el
-      if (docente && correoDocente) {
+        const {
+          docenteActual,
+          laboratorioActual,
+          fechaAct,
+          bloqueActual,
+          estadoActual,
+        } = datosActuales;
+
         const docenteSeleccionado = docentes.find((doc) => doc.id === parseInt(docente));
-        const nombreDocente = docenteSeleccionado ? `${docenteSeleccionado.nombre} ${docenteSeleccionado.apellido}` : 'Docente';
-        const laboratorioSeleccionado = laboratorios.find(lab => lab.id_laboratorio === laboratorio);
-        const nombreLaboratorio = laboratorioSeleccionado ? laboratorioSeleccionado.nombre_laboratorio : 'Laboratorio';
+
+        // Verificar que haya un docente seleccionado
+        if (docenteSeleccionado) {
+
+          const nombreDocente = `${docenteSeleccionado.nombre} ${docenteSeleccionado.apellido}`;
+          const laboratorioSeleccionado = laboratorios.find((lab) => lab.id === parseInt(laboratorio));
+
+          //console.log('anomDoc:', nomDoc)
+          //console.log('DocenteSeleccionado:', docenteSeleccionado)
+          //console.log('DocenteNuevo:', nombreDocente)
+          //console.log('laboratorioSeleccionado:', laboratorioSeleccionado)
+          //console.log('laboratorioNuevo:', nombreLaboratorio)
+
+          const destinatarioUno = docenteActual;
+          const destinatarioDos = nombreDocente;
+          let estadoAntiguo = '';
+          let estadoNuevo = '';
+
+          if (estadoActual) {
+            estadoAntiguo = 'Activo';
+          } else {
+            estadoAntiguo = 'Inactivo';
+          }
+
+          if (estadoReserva) {
+            estadoNuevo = 'Activo';
+          } else {
+            estadoNuevo = 'Inactivo';
+          }
+
+          console.log('Antes:', destinatarioUno);
+          console.log('Despues:', destinatarioDos);
+
+          const mensajeReservaAntes = `
+    Estimado/a ${destinatarioUno},
+
+    Le informamos que se ha modificado la siguente reserva de laboratorio a su nombre. 
+
+        - Nombre del Docente: ${docenteActual}
+        - Nombre del Laboratorio: ${laboratorioActual}
+        - Fecha de la Reserva: ${fechaAct}
+        - Bloque: ${bloqueActual}
+        - Estado de la Reserva: ${estadoAntiguo}
         
-        const mensajeReserva = `
-        Estimado/a ${nombreDocente},
+    A continuación, se detallan los cambios:
+        
+        - Nombre del Docente: ${nombreDocente}
+        - Nombre del Laboratorio: ${laboratorioSeleccionado.nombre}
+        - Fecha de la Reserva: ${fecha}
+        - Bloque: ${bloque}
+        - Estado de la Reserva: ${estadoNuevo}
+        
+    Para comprobar los cambios realizados en su reserva, puede ingresar al siguiente link:
+    https://frontendaplilab-production.up.railway.app/
+        
+    Gracias,
+    Sistema de Reserva de Laboratorios
+        `;
 
-        Le informamos que se ha modificado la reserva de laboratorio "${nombreLaboratorio}" a su nombre.
+        const mensajeReservaDespues = `
+        Estimado/a ${destinatarioDos},
+    
+        Le informamos que se ha modificado la siguente reserva de laboratorio a su nombre. 
+    
+            - Nombre del Docente: ${docenteActual}
+            - Nombre del Laboratorio: ${laboratorioActual}
+            - Fecha de la Reserva: ${fechaAct}
+            - Bloque: ${bloqueActual}
+            - Estado de la Reserva: ${estadoAntiguo}
+            
+        A continuación, se detallan los cambios:
+            
+            - Nombre del Docente: ${nombreDocente}
+            - Nombre del Laboratorio: ${laboratorioSeleccionado.nombre}
+            - Fecha de la Reserva: ${fecha}
+            - Bloque: ${bloque}
+            - Estado de la Reserva: ${estadoNuevo}
+            
         Para comprobar los cambios realizados en su reserva, puede ingresar al siguiente link:
-        <a href="https://frontendaplilab-production.up.railway.app/">https://frontendaplilab-production.up.railway.app/</a>
-
+        https://frontendaplilab-production.up.railway.app/
+            
         Gracias,
         Sistema de Reserva de Laboratorios
-        `;
-        enviarNotificacionPorCorreo([correoDocente], 'Nueva Reserva de Laboratorio', mensajeReserva);
-      } else {
-        // En el de que no se haya seleccionado un docente
-        console.warn('Por favor, seleccione un docente antes de agendar la reserva.');
-      }
+            `;
+
+          if (destinatarioUno === destinatarioDos) {
+            console.log('un correo:', docenteActual, datosActuales.emailDocenteOriginal)
+            enviarNotificacionPorCorreo([datosActuales.emailDocenteOriginal], "Modificación en Reserva de Laboratorio", mensajeReservaAntes);
+
+          } else {
+            console.log('dos correos:', docenteActual, datosActuales.emailDocenteOriginal, '/', nombreDocente, docenteSeleccionado.email)
+            enviarNotificacionPorCorreo([datosActuales.emailDocenteOriginal], "Modificación de reserva de laboratorio", mensajeReservaAntes);
+            enviarNotificacionPorCorreo([docenteSeleccionado.email], "Modificación de reserva de laboratorio", mensajeReservaDespues);
+          }
+
+        } else {
+          // En el de que no se haya seleccionado un docente
+          console.warn('Por favor, seleccione un docente antes de agendar la reserva.');
+        }
 
       })
       .catch(error => {
@@ -137,13 +250,6 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
   const handleDocenteChange = e => {
     const docenteId = e.target.value;
     setDocente(docenteId);
-    
-    const docenteSeleccionado = docentes.find((docente) => docente.id === parseInt(docenteId));
-    if (docenteSeleccionado) {
-      setCorreoDocente(docenteSeleccionado.email);
-    } else {
-      setCorreoDocente('');
-    }
   };
 
   const handleFechaChange = e => {
@@ -163,22 +269,35 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
     try {
       // Endpoint Notificaciones
       const urlServicioExterno = 'https://mailnotification.onrender.com/v1/notificacion';
-  
+
       // Datos del correo electrónico
       const datosCorreo = {
         toUser: destinatarios,
         subject: asunto,
         message: mensaje,
       };
-  
+
+      //console.log('destinatarios:', destinatarios);
+      //console.log('asunto:', asunto);
+      //console.log('mensaje:', mensaje);
+
       // Solicitud POST
       const respuesta = await axios.post(urlServicioExterno, datosCorreo);
-  
+
+      // Imprime detalles de la respuesta si es necesario
+      console.log('Respuesta del servicio externo:', respuesta.data);
+
     } catch (error) {
-      // Manejar errores en caso de que la solicitud falle
+      // Maneja errores en caso de que la solicitud falle
       console.error('Error al enviar la notificación por correo electrónico:', error.message);
+
+      // Imprime detalles de la respuesta en caso de que existan
+      if (error.response) {
+        console.error('Detalles de la respuesta:', error.response.data);
+      }
     }
   }
+
 
   return (
     <div>
@@ -188,7 +307,7 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
       {modalVisible && (
         <div className="modal my-5" id="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
           <div className="modal-dialog" role="document">
-          <div className="modal-content border border-white" style={{ height: '800px', background: 'rgb(35, 35, 35)' }}>
+            <div className="modal-content border border-white" style={{ height: '800px', background: 'rgb(35, 35, 35)' }}>
               <div className="modal-header">
                 <h5 className="modal-title fs-3" style={{ color: 'white', marginLeft: '100px' }}>Modificar Reserva</h5>
                 <button type="button" className="close" aria-label="Cerrar" style={{ backgroundColor: 'transparent', border: 'none' }} onClick={handleCancelar}>

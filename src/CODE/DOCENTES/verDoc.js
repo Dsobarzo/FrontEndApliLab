@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { obtenerDocentes, actualizarDocentes } from '../actualizarDatos.js';
 import axios from 'axios';
 import EliminarDocente from './eliminarDoc';
 import AgregarDocente from './agregarDoc';
@@ -10,22 +11,20 @@ const ListadoDocentes = () => {
   const [filtroBusqueda, setFiltroBusqueda] = useState('');
 
   useEffect(() => {
-    obtenerDocentes();
-    obtenerCarreras();
+    obtenerDatosDocentes();
+    obtenerDatosCarreras();
   }, []);
 
-  const obtenerDocentes = () => {
-    axios
-      .get('https://apilab-backend-sandbox.up.railway.app/obtenerprofesores')
-      .then(response => {
-        setDocentes(response.data);
-      })
-      .catch(error => {
-        console.error('Error al obtener los docentes:', error);
-      });
+  const obtenerDatosDocentes = async () => {
+    try {
+      const docentesData = await obtenerDocentes();
+      setDocentes(docentesData);
+    } catch (error) {
+      console.error('//Error al obtener los docentes:', error);
+    }
   };
 
-  const obtenerCarreras = () => {
+  const obtenerDatosCarreras = () => {
     axios
       .get('https://apilab-backend-sandbox.up.railway.app/obtenercarreras')
       .then(response => {
@@ -40,16 +39,35 @@ const ListadoDocentes = () => {
       });
   };
 
-  const handleDocenteModificado = () => {
-    obtenerDocentes();
+  const handleDocenteModificado = async () => {
+    try {
+      await actualizarDocentes();
+      obtenerDatosDocentes();
+      obtenerDatosCarreras();
+    } catch (error) {
+      console.error('Error al modificar al docente:', error);
+    }
   };
 
-  const handleDocenteEliminado = () => {
-    obtenerDocentes();
+  const handleDocenteEliminado = async () => {
+    try {
+      await actualizarDocentes();
+      obtenerDatosDocentes();
+      obtenerDatosCarreras();
+    } catch (error) {
+      console.error('Error al eliminar al docente:', error);
+    }
   };
 
-  const handleDocenteAgregado = () => {
-    obtenerDocentes();
+  const handleDocenteAgregado = async () => {
+    try {
+      await actualizarDocentes();
+      obtenerDatosDocentes();
+      obtenerDatosCarreras();
+
+    } catch (error) {
+      console.error('Error al agregar al docente:', error);
+    }
   };
 
   const handleFiltroBusquedaChange = (e) => {

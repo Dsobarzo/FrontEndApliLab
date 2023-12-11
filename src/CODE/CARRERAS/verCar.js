@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { obtenerCarreras, actualizarCarreras } from '../actualizarDatos.js';
 import EliminarCarrera from './eliminarCar';
 import AgregarCarrera from './agregarCar';
 import ModificarCarrera from './modificarCar';
@@ -9,30 +9,43 @@ const ListadoCarreras = () => {
   const [filtroCarrera, setFiltroCarrera] = useState('');
 
   useEffect(() => {
-    obtenerCarreras();
+    obtenerDatos();
   }, []);
 
-  const obtenerCarreras = () => {
-    axios
-      .get('https://apilab-backend-sandbox.up.railway.app/obtenercarreras')
-      .then(response => {
-        setCarreras(response.data);
-      })
-      .catch(error => {
-        console.error('Error al obtener las carreras:', error);
-      });
+  const obtenerDatos = async () => {
+    try {
+      const carrerasData = await obtenerCarreras();
+      setCarreras(carrerasData);
+    } catch (error) {
+      console.error('//Error al obtener las carreras:', error);
+    }
   };
 
-  const handleCarreraModificada = () => {
-    obtenerCarreras();
+  const handleCarreraModificada = async () => {
+    try {
+      await actualizarCarreras();
+      obtenerDatos();
+    } catch (error) {
+      console.error('Error al modificar la carrera:', error);
+    }
   };
 
-  const handleCarreraEliminada = () => {
-    obtenerCarreras();
+  const handleCarreraEliminada = async () => {
+    try {
+      await actualizarCarreras();
+      obtenerDatos();
+    } catch (error) {
+      console.error('Error al eliminar la carrera:', error);
+    }
   };
 
-  const handleCarreraAgregada = () => {
-    obtenerCarreras();
+  const handleCarreraAgregada = async () => {
+    try {
+      await actualizarCarreras();
+      obtenerDatos();
+    } catch (error) {
+      console.error('Error al agregar la carrera:', error);
+    }
   };
 
   const handleFiltroCarreraChange = (e) => {

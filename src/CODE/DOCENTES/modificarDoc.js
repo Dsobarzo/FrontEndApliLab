@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { obtenerCarreras } from '../actualizarDatos.js';
 import axios from 'axios';
 
 const ModificarDocente = ({ docente, onDocenteModificado }) => {
@@ -15,18 +16,16 @@ const ModificarDocente = ({ docente, onDocenteModificado }) => {
   const MAX_CARACTERES_EMAIL = 50;
 
   useEffect(() => {
-    obtenerCarreras();
+    obtenerDatos();
   }, []);
 
-  const obtenerCarreras = () => {
-    axios
-      .get('https://apilab-backend-sandbox.up.railway.app/obtenercarreras')
-      .then(response => {
-        setCarreras(response.data);
-      })
-      .catch(error => {
-        console.error('Error al obtener las carreras:', error);
-      });
+  const obtenerDatos = async () => {
+    try {
+      const carrerasData = await obtenerCarreras();
+      setCarreras(carrerasData);
+    } catch (error) {
+      console.error('//Error al obtener las carreras:', error);
+    }
   };
 
   const handleModificar = () => {

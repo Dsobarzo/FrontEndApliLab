@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { obtenerCarreras } from '../actualizarDatos.js';
 import axios from 'axios';
 
 const AgregarDocente = ({ onDocenteAgregado }) => {
@@ -14,18 +15,16 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
   const MAX_CARACTERES_EMAIL = 50;
 
   useEffect(() => {
-    obtenerCarreras();
+    obtenerDatos();
   }, []);
 
-  const obtenerCarreras = () => {
-    axios
-      .get('https://apilab-backend-sandbox.up.railway.app/obtenercarreras')
-      .then(response => {
-        setCarreras(response.data);
-      })
-      .catch(error => {
-        console.error('Error al obtener las carreras:', error);
-      });
+  const obtenerDatos = async () => {
+    try {
+      const carrerasData = await obtenerCarreras();
+      setCarreras(carrerasData);
+    } catch (error) {
+      console.error('//Error al obtener las carreras:', error);
+    }
   };
 
   const handleAgregar = () => {
@@ -45,7 +44,7 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
       .post('https://apilab-backend-sandbox.up.railway.app/guardarprofesor', docente)
       .then(response => {
         console.log('Docente agregado:', response.data);
-        onDocenteAgregado();
+        onDocenteAgregado(); // Actualiza los datos
         setNombre('');
         setApellido('');
         setEmail('');
@@ -72,10 +71,18 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
     setEmail(value);
   };
 
-  const handleCarreraChange = e => {
+  const handleCarreraChange = async e => {
     const value = e.target.value;
     setSelectedCarrera(value);
+  
+    try {
+      // Actualizar listado de carreras
+      await obtenerDatos();
+    } catch (error) {
+      console.error('Error al obtener las carreras después de cambiar la selección:', error);
+    }
   };
+  
 
   return (
     <div>
@@ -120,6 +127,7 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
             className='form-control'
             style={{ maxWidth: '180px' }}
             value={selectedCarrera}
+            onClick={obtenerDatos}
             onChange={handleCarreraChange}
           >
             <option value=''>Seleccionar carrera</option>
