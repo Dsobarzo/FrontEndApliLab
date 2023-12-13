@@ -111,6 +111,7 @@ const ListadoReservas = () => {
         <div className='col-2 p-1'>
           <input
             type='text'
+            id= 'filtroBusqueda'
             value={filtroBusqueda}
             onChange={handleFiltroBusquedaChange}
             className='form-control fs-6'

@@ -57,3 +57,12 @@ h1{
 .footer p{
     font-size: 2vh;
 }
+#filtroCarrera{
+    text-align: left;
+}
+#filtroBusqueda{
+    text-align: left; 
+}
+#filtroDocente{
+    text-align: left; 
+}

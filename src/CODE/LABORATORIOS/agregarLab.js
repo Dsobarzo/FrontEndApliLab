@@ -17,13 +17,13 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
       setAlertaVisible(true);
       return;
     }
-  
+
     const laboratorio = {
       nombre: nombre,
       ubicacion: ubicacion,
       capacidad: parseInt(capacidad)
     };
-  
+
     axios
       .post('https://apilab-backend-sandbox.up.railway.app/guardarlaboratorio', laboratorio)
       .then(response => {
@@ -60,49 +60,51 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
   };
 
   return (
-    <div style={{ width: '320px'}}>
-      <h2 className='text-center fs-3 my-4' style={{ color: 'white' }} >AGREGAR LABORATORIO</h2>
-      <form>
-        <div className='form-group p-2' style={{ width: '100%'}}>
+    <div>
+      <form><br/>
+      <h2 className='text-left fs-3' style={{ color: 'white' }} >AGREGAR LABORATORIO</h2>
+        <div className='form-group p-2'>
           <label className='fs-4'>Nombre:</label>
           <input
             type='text'
             className='form-control'
-            style={{ width: '100%' }}
+            style={{ textAlign: 'left', width: '10px' }}
             value={nombre}
             onChange={handleNombreChange}
             maxLength={MAX_CARACTERES_NOMBRE}
           />
         </div>
-        <div className='form-group p-2' style={{ width: '100%'}}>
+        <div className='form-group p-2'>
           <label className='fs-4'>Ubicación:</label>
-          <input
-            type='text'
+          <select
             className='form-control'
-            style={{ width: '100%' }}
+            style={{ maxWidth: '180px' }}
             value={ubicacion}
             onChange={handleUbicacionChange}
-            maxLength={MAX_CARACTERES_UBICACION}
-          />
+          >
+            <option value="">Seleccionar piso</option>
+            <option value="1er piso">1er piso</option>
+            <option value="2do piso">2do piso</option>
+          </select>
         </div>
-        <div className='form-group p-2' style={{ width: '100%'}}>
+        <div className='form-group p-2'>
           <label className='fs-4'>Capacidad:</label>
           <input
             type='number'
             className='form-control'
-            style={{ width: '100%' }}
+            style={{ width: '10px' }}
             value={capacidad}
             onChange={handleCapacidadChange}
-            min={0}
+            min={1}
             max={Math.pow(10, MAX_DIGITOS_CAPACIDAD) - 1}
           />
         </div>
-        <div className='col-8' style={{ textAlign: 'center', width: '100%'}}>
+        <div className='d-grid col-8 mx-4'>
           <button
             type='button'
-            className='btn btn-dark'
+            className='btn btn-dark mt-5' 
             onClick={handleAgregar}
-            >
+          >
             Agregar
           </button>
         </div>

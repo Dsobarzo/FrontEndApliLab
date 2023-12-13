@@ -45,7 +45,7 @@ const AgregarCarrera = ({ onCarreraAgregada }) => {
           <input
             type='text'
             className='form-control'
-            style={{ maxWidth: '10px' }}
+            style={{ textAlign: 'left', maxWidth: '10px' }}
             value={nombreCarrera}
             onChange={handleNombreCarreraChange}
             maxLength={MAX_CARACTERES}

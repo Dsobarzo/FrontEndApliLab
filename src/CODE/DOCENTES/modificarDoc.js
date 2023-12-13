@@ -74,12 +74,12 @@ const ModificarDocente = ({ docente, onDocenteModificado }) => {
   };
 
   const resetForm = () => {
-    setNombre(docente.nombre);
-    setApellido(docente.apellido);
-    setEmail(docente.email);
-    setSelectedCarrera(docente.id_carrera);
+    setNombre((prevNombre) => prevNombre || '');
+    setApellido((prevApellido) => prevApellido || '');
+    setEmail((prevEmail) => prevEmail || '');
+    setSelectedCarrera((prevSelectedCarrera) => prevSelectedCarrera);
   };
-
+  
   const handleNombreChange = e => {
     const value = e.target.value.slice(0, MAX_CARACTERES_NOMBRE);
     setNombre(value);

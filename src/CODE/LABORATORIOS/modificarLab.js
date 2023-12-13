@@ -41,7 +41,6 @@ const ModificarLaboratorio = ({ laboratorio, onLaboratorioModificado }) => {
         onLaboratorioModificado(); // Actualiza los datos
         cerrarModal();
         resetForm();
-
       })
       .catch(error => {
         console.error('Error al modificar el laboratorio:', error);
@@ -58,10 +57,11 @@ const ModificarLaboratorio = ({ laboratorio, onLaboratorioModificado }) => {
   };
 
   const resetForm = () => {
-    setNombre(laboratorio.nombre);
-    setUbicacion(laboratorio.ubicacion);
-    setCapacidad(laboratorio.capacidad);
+    setNombre((prevNombre) => prevNombre);
+    setUbicacion((prevUbicacion) => prevUbicacion);
+    setCapacidad((prevCapacidad) => prevCapacidad);
   };
+
 
   const handleNombreChange = e => {
     const value = e.target.value.slice(0, MAX_CARACTERES_NOMBRE);
@@ -112,13 +112,16 @@ const ModificarLaboratorio = ({ laboratorio, onLaboratorioModificado }) => {
                   </div>
                   <div className="form-group text-center">
                     <label className='fs-4' style={{ color: 'white' }}>Ubicación:</label>
-                    <input
-                      type="text"
-                      className="form-control mx-auto"
+                    <select
+                      className='form-control mx-auto text-center'
+                      style={{ width: '65%' }}
                       value={ubicacion}
                       onChange={handleUbicacionChange}
-                      maxLength={MAX_CARACTERES_UBICACION}
-                    />
+                    >
+                      <option value="">Seleccionar piso</option>
+                      <option value="1er piso">1er piso</option>
+                      <option value="2do piso">2do piso</option>
+                    </select>
                   </div>
                   <div className="form-group text-center">
                     <label className='fs-4' style={{ color: 'white' }}>Capacidad:</label>
@@ -127,7 +130,7 @@ const ModificarLaboratorio = ({ laboratorio, onLaboratorioModificado }) => {
                       className="form-control mx-auto"
                       value={capacidad}
                       onChange={handleCapacidadChange}
-                      min={0}
+                      min={1}
                       max={Math.pow(10, MAX_DIGITOS_CAPACIDAD) - 1}
                     />
                   </div>

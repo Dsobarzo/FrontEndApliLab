@@ -87,13 +87,13 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
   return (
     <div>
       <form><br/>
-      <h2 className='text-left fs-3' style={{ color: 'white'}} >AGREGAR LABORATORIO</h2>
+      <h2 className='text-left fs-3' style={{ color: 'white'}} >AGREGAR DOCENTE</h2>
         <div className='form-group p-2'>
           <label className='fs-4'>Nombre:</label>
           <input
             type='text'
             className='form-control'
-            style={{ maxWidth: '10px' }}
+            style={{ textAlign: 'left', maxWidth: '10px' }}
             value={nombre}
             onChange={handleNombreChange}
             maxLength={MAX_CARACTERES_NOMBRE}
@@ -104,7 +104,7 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
           <input
             type='text'
             className='form-control'
-            style={{ maxWidth: '10px' }}
+            style={{ textAlign: 'left', maxWidth: '10px' }}
             value={apellido}
             onChange={handleApellidoChange}
             maxLength={MAX_CARACTERES_APELLIDO}
@@ -115,7 +115,7 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
           <input
             type='email'
             className='form-control'
-            style={{ maxWidth: '10px' }}
+            style={{ textAlign: 'left', maxWidth: '10px' }}
             value={email}
             onChange={handleEmailChange}
             maxLength={MAX_CARACTERES_EMAIL}
@@ -139,7 +139,9 @@ const AgregarDocente = ({ onDocenteAgregado }) => {
           </select>
         </div>
         <div className='d-grid col-8 mx-4'>
-          <button type='button' className='btn btn-dark mt-5' onClick={handleAgregar}>
+          <button type='button' 
+          className='btn btn-dark mt-5' 
+          onClick={handleAgregar}>
             Agregar
           </button>
         </div>

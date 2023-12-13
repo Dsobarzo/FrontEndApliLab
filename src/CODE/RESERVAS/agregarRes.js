@@ -47,13 +47,12 @@ const AgregarReserva = ({ onReservaAgregada }) => {
     const fechaActual = new Date();
     const fechaReserva = new Date(fecha);
 
-    if (fechaReserva < fechaActual) {
+    if (fechaReserva < fechaActual - 1) {
       setErrorFechaPasada(true);
       return;
+    } else {
+      setErrorFechaPasada(false);
     }
-
-    // Restablese mendsaje de error
-    setErrorFechaPasada(false);
 
     const reserva = {
       id_laboratorios: laboratorio,

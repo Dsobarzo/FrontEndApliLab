@@ -50,8 +50,9 @@ const ModificarCarrera = ({ carrera, onCarreraModificada }) => {
   };
 
   const resetForm = () => {
-    setNombre(carrera.carrera);
+    setNombre((prevNombre) => prevNombre);
   };
+  
 
   const handleNombreChange = e => {
     const value = e.target.value.slice(0, MAX_CARACTERES_NOMBRE);

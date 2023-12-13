@@ -236,11 +236,11 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
   };
 
   const resetForm = () => {
-    setLaboratorio(reserva.id_laboratorios || '');
-    setDocente(reserva.id_profesores || '');
-    setFecha(reserva.fecha_reserva);
-    setBloque(reserva.bloque);
-    setEstadoReserva(reserva.estado);
+    setLaboratorio((prevLaboratorio) => prevLaboratorio || '');
+    setDocente((prevDocente) => prevDocente || ''); 
+    setFecha((prevFecha) => prevFecha);
+    setBloque((prevBloque) => prevBloque);
+    setEstadoReserva((prevEstadoReserva) => prevEstadoReserva);
   };
 
   const handleLaboratorioChange = e => {

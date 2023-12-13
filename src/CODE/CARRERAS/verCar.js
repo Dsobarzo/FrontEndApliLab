@@ -63,7 +63,7 @@ const ListadoCarreras = () => {
       <div className='row align-items-start'>
         <div className='row'>
           <div className='col-1'>
-            <label htmlFor='filtroCarrera' className='form-label fs-4 text-center mt-1'>Buscar:</label>
+            <label htmlFor='filtroCarrera' className='form-label fs-4 mt-1'>Buscar:</label>
           </div>
           <div className='col-2 pt-1'>
             <input
