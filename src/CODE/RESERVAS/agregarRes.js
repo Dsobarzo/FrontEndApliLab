@@ -11,6 +11,7 @@ const AgregarReserva = ({ onReservaAgregada }) => {
   const [docentes, setDocentes] = useState([]);
   const [alertaVisible, setAlertaVisible] = useState(false);
   const [errorFechaPasada, setErrorFechaPasada] = useState(false);
+  const [errorFechaSuperior, setErrorFechaSuperior] = useState(false);
 
   useEffect(() => {
     obtenerDatosLaboratorios();
@@ -37,7 +38,7 @@ const AgregarReserva = ({ onReservaAgregada }) => {
     }
   };
 
-  const handleReservaAgregada = () => {
+  const handleReservaAgregada = async () => {
     if (!laboratorio || !docente || !fecha || !bloque) {
       setAlertaVisible(true);
       return;
@@ -52,6 +53,17 @@ const AgregarReserva = ({ onReservaAgregada }) => {
       return;
     } else {
       setErrorFechaPasada(false);
+    }
+
+    // Verificar si la fecha supera un año
+    const unAnoEnMilisegundos = 365 * 24 * 60 * 60 * 1000;
+    const fechaMaxima = new Date(fechaActual.getTime() + unAnoEnMilisegundos);
+
+    if (fechaReserva > fechaMaxima) {
+      setErrorFechaSuperior(true);
+      return;
+    } else {
+      setErrorFechaSuperior(false);
     }
 
     const reserva = {
@@ -77,43 +89,43 @@ const AgregarReserva = ({ onReservaAgregada }) => {
 
         const docenteSeleccionado = docentes.find((doc) => doc.id === parseInt(docente));
 
-      // Verificar que haya un docente seleccionado y un correo asociado
-      if (docenteSeleccionado) {
+        // Verificar que haya un docente seleccionado y un correo asociado
+        if (docenteSeleccionado) {
 
-        const nombreDocente = `${docenteSeleccionado.nombre} ${docenteSeleccionado.apellido}`;
-        const laboratorioSeleccionado = laboratorios.find((lab) => lab.id === parseInt(laboratorio));
+          const nombreDocente = `${docenteSeleccionado.nombre} ${docenteSeleccionado.apellido}`;
+          const laboratorioSeleccionado = laboratorios.find((lab) => lab.id === parseInt(laboratorio));
 
-        let estadoNuevo = '';
-        const estado = true;
+          let estadoNuevo = '';
+          const estado = true;
 
-        if (estado) {
-          estadoNuevo = 'Activo';
+          if (estado) {
+            estadoNuevo = 'Activo';
+          } else {
+            estadoNuevo = 'Inactivo';
+          }
+
+          const mensajeReserva = `
+          Estimado/a ${nombreDocente},
+  
+          Le informamos que se ha agregado una reserva de laboratorio con el siguiente detalle:
+          
+          - Nombre del Docente: ${nombreDocente}
+          - Nombre del Laboratorio: ${laboratorioSeleccionado.nombre}
+          - Fecha de la Reserva: ${fecha}
+          - Bloque: ${bloque}
+          - Estado de la Reserva: ${estadoNuevo}
+  
+          Para comprobar los datos de su reserva, puede ingresar al siguiente link:
+          https://frontendaplilab-production.up.railway.app/
+  
+          Gracias,
+          Sistema de Reserva de Laboratorios
+          `;
+          enviarNotificacionPorCorreo([docenteSeleccionado.email], 'Nueva Reserva de Laboratorio', mensajeReserva);
         } else {
-          estadoNuevo = 'Inactivo';
+          // En el de que no se haya seleccionado un docente
+          console.warn('Por favor, seleccione un docente antes de agendar la reserva.');
         }
-
-        const mensajeReserva = `
-        Estimado/a ${nombreDocente},
-
-        Le informamos que se ha agregado una reserva de laboratorio con el siguiente detalle:
-        
-        - Nombre del Docente: ${nombreDocente}
-        - Nombre del Laboratorio: ${laboratorioSeleccionado.nombre}
-        - Fecha de la Reserva: ${fecha}
-        - Bloque: ${bloque}
-        - Estado de la Reserva: ${estadoNuevo}
-
-        Para comprobar los datos de su reserva, puede ingresar al siguiente link:
-        https://frontendaplilab-production.up.railway.app/
-
-        Gracias,
-        Sistema de Reserva de Laboratorios
-        `;
-        enviarNotificacionPorCorreo([docenteSeleccionado.email], 'Nueva Reserva de Laboratorio', mensajeReserva);
-      } else {
-        // En el de que no se haya seleccionado un docente
-        console.warn('Por favor, seleccione un docente antes de agendar la reserva.');
-      }
 
       })
       .catch(error => {
@@ -129,7 +141,7 @@ const AgregarReserva = ({ onReservaAgregada }) => {
   const handleDocenteChange = e => {
     const docenteId = e.target.value;
     setDocente(docenteId);
-    
+
   };
 
   const handleFechaChange = e => {
@@ -144,18 +156,18 @@ const AgregarReserva = ({ onReservaAgregada }) => {
     try {
       // Endpoint Notificaciones
       const urlServicioExterno = 'https://mailnotification.onrender.com/v1/notificacion';
-  
+
       // Datos del correo electrónico
       const datosCorreo = {
         toUser: destinatarios,
         subject: asunto,
         message: mensaje,
       };
-  
+
       // Solicitud POST
       const respuesta = await axios.post(urlServicioExterno, datosCorreo);
       console.log(respuesta)
-  
+
     } catch (error) {
       // Manejar errores en caso de que la solicitud falle
       console.error('Error al enviar la notificación por correo electrónico:', error.message);
@@ -164,19 +176,18 @@ const AgregarReserva = ({ onReservaAgregada }) => {
 
   return (
     <div>
-      <form>
-        <br />
+      <form style={{ width: '100%' }}><br />
         <h2 className='text-left fs-3' style={{ color: 'white' }}>AGREGAR RESERVA</h2>
         <div className='form-group p-2'>
           <label className='fs-4'>Laboratorio:</label>
           <select
             className='form-control'
-            style={{ maxWidth: '180px' }}
+            style={{ maxWidth: '100%' }}
             value={laboratorio}
             onClick={obtenerDatosLaboratorios}
             onChange={handleLaboratorioChange}
           >
-            <option value=''>Seleccion laboratorio</option>
+            <option value=''>Selección laboratorio</option>
             {laboratorios.map(lab => (
               <option key={lab.id} value={lab.id}>
                 {lab.nombre}
@@ -186,12 +197,12 @@ const AgregarReserva = ({ onReservaAgregada }) => {
         </div>
         <div className='form-group p-2'>
           <label className='fs-4'>Docente:</label>
-          <select 
-          className='form-control'  
-          style={{ maxWidth: '180px' }}
-          value={docente} 
-          onClick={obtenerDatosDocentes}
-          onChange={handleDocenteChange}
+          <select
+            className='form-control'
+            style={{ maxWidth: '100%' }}
+            value={docente}
+            onClick={obtenerDatosDocentes}
+            onChange={handleDocenteChange}
           >
             <option value=''>Seleccion docente</option>
             {docentes.map(docente => (
@@ -203,11 +214,11 @@ const AgregarReserva = ({ onReservaAgregada }) => {
         </div>
         <div className='form-group p-2'>
           <label className='fs-4'>Bloque:</label>
-          <select 
-          className='form-control' 
-          style={{ maxWidth: '180px' }}
-          value={bloque} 
-          onChange={handleBloqueChange}>
+          <select
+            className='form-control'
+            style={{ maxWidth: '100%' }}
+            value={bloque}
+            onChange={handleBloqueChange}>
             <option value=''>Seleccion bloque</option>
             <option value='1er Bloque'>1er Bloque [07:50 - 09:20]</option>
             <option value='2do Bloque'>2do Bloque [09:30 - 11:00]</option>
@@ -220,15 +231,20 @@ const AgregarReserva = ({ onReservaAgregada }) => {
         </div >
         <div className='form-group p-2'>
           <label className='fs-4'>Fecha:</label>
-          <input 
-          type='date' 
-          className='form-control' 
-          style={{ maxWidth: '180px' }}
-          value={fecha} 
-          onChange={handleFechaChange} />
+          <input
+            type='date'
+            className='form-control'
+            style={{ maxWidth: '100%' }}
+            value={fecha}
+            onChange={handleFechaChange} />
         </div>
-        <div className='d-grid col-8 mx-4'>
-          <button type='button' className='btn btn-dark mt-5' onClick={handleReservaAgregada}>
+        <div className='form-group p-2'>
+          <button
+            type='button'
+            className='btn btn-dark mt-2 mb-2 mx-4'
+            onClick={handleReservaAgregada}
+            style={{ minWidth: '80%' }}
+          >
             Agregar
           </button>
         </div>
@@ -247,6 +263,14 @@ const AgregarReserva = ({ onReservaAgregada }) => {
             <use xlinkHref="#exclamation-triangle-fill" />
           </svg>
           <div>No se puede reservar en una fecha pasada.</div>
+        </div>
+      )}
+      {errorFechaSuperior && (
+        <div className="alert alert-danger d-flex align-items-center" role="alert">
+          <svg width="24" height="24" role="img" aria-label="Danger:">
+            <use xlinkHref="#exclamation-triangle-fill" />
+          </svg>
+          <div>Solo puedes seleccionar una fecha inferior a un año.</div>
         </div>
       )}
     </div>

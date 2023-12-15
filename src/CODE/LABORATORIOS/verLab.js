@@ -57,14 +57,14 @@ const ListadoLaboratorios = () => {
   );
 
   return (
-    <div className='row'>
+    <div className='row' style={{ minHeight: '700px'}}>
       <p className='fs-2'>Listado de Laboratorios</p>
       <div className='row align-items-start'>
         <div className='row'>
-          <div className='col-1'>
-            <label htmlFor='filtroLAboratorio' className='form-label fs-4 mt-1'>Buscar:</label>
+          <div className='col-xs-1 col-md-1'>
+            <label htmlFor='filtroLaboratorio' className='form-label fs-5 mt-1'>Buscar:</label>
           </div>
-          <div className='col-2  pt-1'>
+          <div className='col-xs-2 col-md-2'>
             <select
               id='filtroLaboratorio'
               className='form-select fs-6'
@@ -81,7 +81,7 @@ const ListadoLaboratorios = () => {
             </select><br />
           </div>
         </div>
-        <div className='col-10 table-responsive' style={{ maxHeight: '600px' }}>
+        <div className='col-xs-10 col-md-10 table-responsive' style={{ height: '500px' }}>
           <table className="table table-dark table-striped table-hover caption-top align-middle">
             <thead>
               <tr>
@@ -109,7 +109,7 @@ const ListadoLaboratorios = () => {
             </tbody>
           </table>
           </div>
-          <div className='col-2 table-responsive'>
+          <div className='col-xs-2 col-md-2 table-responsive'>
             <AgregarLaboratorio onLaboratorioAgregado={handleLaboratorioAgregado} />
           </div>
         </div>

@@ -50,7 +50,8 @@ label{
 }
 input{
   border-radius: 10px;
-  width: 30vw;
+  width: 22vw;
+  margin: 50px 0px;
   max-width: 300px;
   min-width: 180px;
   height: 39px;
@@ -58,11 +59,18 @@ input{
 }
 .btn{
   margin-top: 30px;
-  margin-bottom: 40px;
   width: 25%;
   min-width: 150px;
+}
+.error{
+  height: 80px;
+  margin-top: 40px;
 }
 p{
   color: rgb(255, 255, 255);
   padding: 0vh 4vw;
 }
+.terminos{
+  margin-bottom: 20px;
+}
+

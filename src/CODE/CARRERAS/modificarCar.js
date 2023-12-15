@@ -5,6 +5,7 @@ const ModificarCarrera = ({ carrera, onCarreraModificada }) => {
   const [nombre, setNombre] = useState(carrera.carrera);
   const [modalVisible, setModalVisible] = useState(false);
   const [alertaVisible, setAlertaVisible] = useState(false);
+  const [alertaDuplicidad, setAlertaDuplicidad] = useState(false);
 
   const MAX_CARACTERES_NOMBRE = 30;
 
@@ -17,10 +18,27 @@ const ModificarCarrera = ({ carrera, onCarreraModificada }) => {
     resetForm();
   };
 
-  const handleGuardar = () => {
+  const handleGuardar = async () => {
     if (!nombre) {
       setAlertaVisible(true);
       return;
+    }
+
+    // Obtener la lista de carreras existentes
+    const response = await axios.get('https://apilab-backend-sandbox.up.railway.app/obtenercarreras');
+    const carrerasExist = response.data;
+
+    // Verificar si la nueva carrera ya existe
+    const carreraExistente = carrerasExist.find(
+      (carrera) => carrera.carrera === nombre
+    );
+
+    if (carreraExistente) {
+      setAlertaDuplicidad(true);
+      setAlertaVisible(false);
+      return;
+    } else {
+      setAlertaDuplicidad(false);
     }
 
     const carreraModificada = {
@@ -52,7 +70,7 @@ const ModificarCarrera = ({ carrera, onCarreraModificada }) => {
   const resetForm = () => {
     setNombre((prevNombre) => prevNombre);
   };
-  
+
 
   const handleNombreChange = e => {
     const value = e.target.value.slice(0, MAX_CARACTERES_NOMBRE);
@@ -67,7 +85,7 @@ const ModificarCarrera = ({ carrera, onCarreraModificada }) => {
       {modalVisible && (
         <div className="modal my-5" id="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
           <div className="modal-dialog" role="document">
-          <div className="modal-content border border-white" style={{ marginTop: '150px', height: '500px', background: 'rgb(35, 35, 35)' }}>
+            <div className="modal-content border border-white" style={{ marginTop: '150px', height: '500px', background: 'rgb(35, 35, 35)' }}>
               <div className="modal-header">
                 <h5 className="modal-title fs-3" style={{ color: 'white', marginLeft: '115px' }}>Modificar Carrera</h5>
                 <button type="button" className="close" style={{ backgroundColor: 'transparent', border: 'none' }} onClick={handleCancelar}>
@@ -90,11 +108,21 @@ const ModificarCarrera = ({ carrera, onCarreraModificada }) => {
               </div>
               {alertaVisible && (
                 <div className="alert alert-danger d-flex mx-5" role="alert">
-                <svg className="text-center" width="24" height="24" role="img" aria-label="Danger:">
-                  <use xlinkHref="#exclamation-triangle-fill" />
+                  <svg className="text-center" width="24" height="24" role="img" aria-label="Danger:">
+                    <use xlinkHref="#exclamation-triangle-fill" />
                   </svg>
                   <div>
                     No puedes dejar el campo en blanco.
+                  </div>
+                </div>
+              )}
+              {alertaDuplicidad && (
+                <div className="alert alert-danger d-flex align-items-center text-center" role="alert">
+                  <svg width="24" height="24" role="img" aria-label="Danger:">
+                    <use xlinkHref="#exclamation-triangle-fill" />
+                  </svg>
+                  <div>
+                    La carrera ya existe.
                   </div>
                 </div>
               )}

@@ -72,7 +72,7 @@ class Login extends React.Component {
             <div className="col-lg-4 col-md-8 col-sm-10 ">
               <div className='detalle'>
                 <div className="columna">
-                  <div className="titulo mb-">
+                  <div className="titulo">
                     <h2 className='fs-2 mb-5'>UNIVERSIDAD DE MAGALLANES</h2>
                   </div>
                   <h2 className='fs-3 mt-3' style={{ color: "white" }}>Gestión de reservas de laboratorios</h2>
@@ -84,7 +84,7 @@ class Login extends React.Component {
                 </div>
               </div>
             </div>
-            <div className="col-lg-4 col-md-6 col-sm-8 px-0">
+            <div className="col-lg-4 col-md-6 col-sm-8">
               <div className="columna" id='login'>
                 <label>Usuario</label>
                 <br />

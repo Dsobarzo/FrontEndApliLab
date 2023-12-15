@@ -36,13 +36,13 @@ function MenuDocente() {
   return (
     <div className='principal'>
       <div className='container bg-black bg-opacity-75'>
-        <div className='cerrarSesion'>
+        <div className='cerrarSesion mb-4'>
           <div className="row align-items-center">
             <div className="col">
               <h1>LISTADO DE LABORATORIOS RESERVADOS</h1>
             </div>
-            <div className="col-auto">
-              <button id='btn_exit' className='btn btn-outline-light' onClick={cerrarSesion}>
+            <div className="col-auto" style={{ marginLeft: '245px'}}>
+              <button className='btn btn-outline-light' onClick={cerrarSesion}>
                 Cerrar Sesión
               </button>
             </div>

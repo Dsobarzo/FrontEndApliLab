@@ -32,6 +32,27 @@ const EliminarLaboratorio = ({ laboratorioId, onLaboratorioEliminado }) => {
   }, [laboratorioId]);
 
   const eliminarLaboratorio = () => {
+
+    const verificarReservas = async () => {
+      try {
+        // Obtener reservas
+        const reservasResponse = await axios.get('https://apilab-backend-sandbox.up.railway.app/obtenerreservas');
+
+        // Verificar si el laboratorio tiene reservas
+        const laboratorioConReservas = reservasResponse.data.some(reserva => reserva.id_laboratorios === laboratorioId);
+        setTieneReservas(laboratorioConReservas);
+      } catch (error) {
+        console.error(`Error al verificar reservas para el laboratorio ${laboratorioId}:`, error);
+      }
+    };
+
+    verificarReservas();
+
+    actualizarLaboratorios();
+    obtenerLaboratorios();
+    actualizarReservas();
+    obtenerReservas();
+
     if (!tieneReservas) {
 
       const confirmacion = window.confirm('¿Estás seguro de que deseas eliminar este laboratorio?');
@@ -54,7 +75,9 @@ const EliminarLaboratorio = ({ laboratorioId, onLaboratorioEliminado }) => {
 
   return (
     <div>
-      <button className="btn btn-danger btn-sm m-1 p-2" onClick={eliminarLaboratorio}>
+      <button 
+      className="btn btn-danger btn-sm m-1 p-2" 
+      onClick={eliminarLaboratorio}>
         Eliminar
       </button>
     </div>

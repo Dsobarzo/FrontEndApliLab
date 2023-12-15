@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { obtenerLaboratorios, obtenerDocentes } from '../actualizarDatos.js';
 import axios from 'axios';
 
 const ModificarReserva = ({ reserva, onReservaModificada }) => {
@@ -12,6 +13,7 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [alertaVisible, setAlertaVisible] = useState(false);
   const [alertaFechaPasada, setAlertaFechaPasada] = useState(false);
+  const [alertaDuplicidad, setAlertaDuplicidad] = useState(false);
 
   const MAX_CARACTERES_FECHA = 10;
 
@@ -25,30 +27,28 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
   });
 
   useEffect(() => {
-    obtenerLaboratorios();
-    obtenerDocentes();
+    obtenerDatosLaboratorios();
+    obtenerDatosDocentes();
   }, []);
 
-  const obtenerLaboratorios = () => {
-    axios
-      .get('https://apilab-backend-sandbox.up.railway.app/obtenerlaboratorios')
-      .then(response => {
-        setLaboratorios(response.data);
-      })
-      .catch(error => {
-        console.error('Error al obtener los laboratorios:', error);
-      });
+  //Obtener listado de laboratorios
+  const obtenerDatosLaboratorios = async () => {
+    try {
+      const laboratoriosData = await obtenerLaboratorios();
+      setLaboratorios(laboratoriosData);
+    } catch (error) {
+      console.error('//Error al obtener los laboratorios:', error);
+    }
   };
 
-  const obtenerDocentes = () => {
-    axios
-      .get('https://apilab-backend-sandbox.up.railway.app/obtenerprofesores')
-      .then(response => {
-        setDocentes(response.data);
-      })
-      .catch(error => {
-        console.error('Error al obtener los docentes:', error);
-      });
+  //Obtener listado de Profesores
+  const obtenerDatosDocentes = async () => {
+    try {
+      const docentesData = await obtenerDocentes();
+      setDocentes(docentesData);
+    } catch (error) {
+      console.error('//Error al obtener los docentes:', error);
+    }
   };
 
   const handleModificar = () => {
@@ -82,15 +82,7 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
 
     if (!laboratorio || !docente || !fecha || !bloque) {
       setAlertaVisible(true);
-      return;
-    }
-
-    // Verificar si la fecha seleccionada es una fecha pasada
-    const fechaActual = new Date();
-    const fechaReserva = new Date(fecha);
-
-    if (fechaReserva < fechaActual) {
-      setAlertaFechaPasada(true);
+      setAlertaDuplicidad(false);
       return;
     }
 
@@ -101,6 +93,15 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
       bloque: bloque,
       estado: estadoReserva
     };
+
+    // Verificar si la fecha seleccionada es una fecha pasada
+    const fechaActual = new Date();
+    const fechaReserva = new Date(fecha);
+
+    if (fechaReserva < fechaActual) {
+      setAlertaFechaPasada(true);
+      return;
+    }
 
     axios
       .put(`https://apilab-backend-sandbox.up.railway.app/modificarreserva/${reserva.id}`, reservaModificada)
@@ -178,7 +179,7 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
     Sistema de Reserva de Laboratorios
         `;
 
-        const mensajeReservaDespues = `
+          const mensajeReservaDespues = `
         Estimado/a ${destinatarioDos},
     
         Le informamos que se ha modificado la siguente reserva de laboratorio a su nombre. 
@@ -237,17 +238,19 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
 
   const resetForm = () => {
     setLaboratorio((prevLaboratorio) => prevLaboratorio || '');
-    setDocente((prevDocente) => prevDocente || ''); 
+    setDocente((prevDocente) => prevDocente || '');
     setFecha((prevFecha) => prevFecha);
     setBloque((prevBloque) => prevBloque);
     setEstadoReserva((prevEstadoReserva) => prevEstadoReserva);
   };
 
   const handleLaboratorioChange = e => {
+    obtenerDatosLaboratorios();
     setLaboratorio(e.target.value);
   };
 
   const handleDocenteChange = e => {
+    obtenerDatosDocentes();
     const docenteId = e.target.value;
     setDocente(docenteId);
   };
@@ -307,7 +310,7 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
       {modalVisible && (
         <div className="modal my-5" id="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
           <div className="modal-dialog" role="document">
-            <div className="modal-content border border-white" style={{ height: '800px', background: 'rgb(35, 35, 35)' }}>
+            <div className="modal-content border border-white" style={{ height: '700px', background: 'rgb(35, 35, 35)' }}>
               <div className="modal-header">
                 <h5 className="modal-title fs-3" style={{ color: 'white', marginLeft: '100px' }}>Modificar Reserva</h5>
                 <button type="button" className="close" aria-label="Cerrar" style={{ backgroundColor: 'transparent', border: 'none' }} onClick={handleCancelar}>
@@ -319,16 +322,23 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
                   <div className="form-group text-center">
                     <label className='fs-4' style={{ color: 'white' }}>Laboratorio:</label>
                     <div className='mx-5'>
-                      <select className="form-control" value={laboratorio} onChange={handleLaboratorioChange}>
-                        <option value="">Seleccione un laboratorio</option>
+                      <select
+                        className="form-control"
+                        value={laboratorio}
+                        onClick={obtenerDatosLaboratorios}
+                        onChange={handleLaboratorioChange}
+                      >
+                        <option value=''>Seleccione un laboratorio</option>
                         {laboratorios.map(lab => (
-                          <option key={lab.id} value={lab.id}>{lab.nombre}</option>
+                          <option key={lab.id} value={lab.id}>
+                            {lab.nombre}
+                          </option>
                         ))}
                       </select>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label style={{ color: 'white' }}>Docente:</label>
+                    <label className='fs-4' style={{ color: 'white' }}>Docente:</label>
                     <div className='mx-5'>
                       <select className="form-control" value={docente} onChange={handleDocenteChange}>
                         <option value="">Seleccione un docente</option>
@@ -340,7 +350,7 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
                   </div>
 
                   <div className="form-group">
-                    <label style={{ color: 'white' }}>Bloque:</label>
+                    <label className='fs-4' style={{ color: 'white' }}>Bloque:</label>
                     <div className='mx-5'>
                       <select className="form-control" value={bloque} onChange={handleBloqueChange}>
                         <option value=''>Seleccione un bloque</option>
@@ -355,7 +365,7 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
                     </div>
                   </div>
                   <div className="form-group">
-                    <label style={{ color: 'white' }}>Estado:</label>
+                    <label className='fs-4' style={{ color: 'white' }}>Estado:</label>
                     <div className='mx-5'>
                       <select className="form-control" value={estadoReserva} onChange={handleEstadoChange}>
                         <option value={true}>Activo</option>
@@ -364,14 +374,15 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
                     </div>
                   </div>
                   <div className="form-group">
-                    <label style={{ color: 'white' }}>Fecha:</label>
+                    <label className='fs-4' style={{ color: 'white' }}>Fecha:</label>
                     <div className='mx-5'>
                       <input
                         type="date"
-                        className="form-control mx-5"
+                        className="form-control"
                         value={fecha}
                         onChange={handleFechaChange}
                         maxLength={MAX_CARACTERES_FECHA}
+                        style={{ minWidth: '290px', maxWidth: '390px' }}
                       />
                     </div>
                   </div>
@@ -394,6 +405,16 @@ const ModificarReserva = ({ reserva, onReservaModificada }) => {
                   </svg>
                   <div>
                     Por favor, complete todos los campos.
+                  </div>
+                </div>
+              )}
+              {alertaDuplicidad && (
+                <div className="alert alert-danger d-flex mx-5" role="alert">
+                  <svg className="text-center" width="24" height="24" role="img" aria-label="Danger:">
+                    <use xlinkHref="#exclamation-triangle-fill" />
+                  </svg>
+                  <div className=''>
+                    Fecha y bloque no disponibles
                   </div>
                 </div>
               )}

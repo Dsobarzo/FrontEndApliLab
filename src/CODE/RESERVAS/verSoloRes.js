@@ -5,8 +5,19 @@ const ListadoSoloReservas = () => {
   const [reservas, setReservas] = useState([]);
   const [laboratorios, setLaboratorios] = useState([]);
   const [docentes, setDocentes] = useState([]);
-  const [filtroBusqueda, setFiltroBusqueda] = useState('');
   const [filtroFecha, setFiltroFecha] = useState('');
+  const [filtroLaboratorio, setFiltroLaboratorio] = useState('');
+  const [filtroDocente, setFiltroDocente] = useState('');
+  const [filtroBloque, setFiltroBloque] = useState('');
+  const [filtroEstado, setFiltroEstado] = useState('');
+
+  const limpiarFiltros = () => {
+    setFiltroFecha('');
+    setFiltroLaboratorio('');
+    setFiltroDocente('');
+    setFiltroBloque('');
+    setFiltroEstado('');
+  };
 
   useEffect(() => {
     obtenerReservas();
@@ -47,8 +58,20 @@ const ListadoSoloReservas = () => {
       });
   };
 
-  const handleFiltroBusquedaChange = (e) => {
-    setFiltroBusqueda(e.target.value);
+  const handleFiltroLaboratorioChange = (e) => {
+    setFiltroLaboratorio(e.target.value);
+  };
+
+  const handleFiltroDocenteChange = (e) => {
+    setFiltroDocente(e.target.value);
+  };
+
+  const handleFiltroBloqueChange = (e) => {
+    setFiltroBloque(e.target.value);
+  };
+
+  const handleFiltroEstadoChange = (e) => {
+    setFiltroEstado(e.target.value);
   };
 
   const handleFiltroFechaChange = (e) => {
@@ -56,16 +79,12 @@ const ListadoSoloReservas = () => {
   };
 
   const reservasFiltradas = reservas.filter((reserva) => {
-    const laboratorio = laboratorios.find((lab) => lab.id === reserva.id_laboratorios);
-    const docente = docentes.find((doc) => doc.id === reserva.id_profesores);
-    const nombreLaboratorio = laboratorio ? laboratorio.nombre.toLowerCase() : '';
-    const nombreDocente = docente ? `${docente.nombre} ${docente.apellido}`.toLowerCase() : '';
-
     return (
-      (!filtroBusqueda ||
-        nombreLaboratorio.includes(filtroBusqueda.toLowerCase()) ||
-        nombreDocente.includes(filtroBusqueda.toLowerCase())) &&
-      (!filtroFecha || reserva.fecha_reserva === filtroFecha)
+      (!filtroDocente || reserva.id_profesores === parseInt(filtroDocente)) &&
+      (!filtroFecha || reserva.fecha_reserva === filtroFecha) &&
+      (!filtroLaboratorio || reserva.id_laboratorios === parseInt(filtroLaboratorio)) &&
+      (!filtroBloque || reserva.bloque === filtroBloque) &&
+      (!filtroEstado || reserva.estado === (filtroEstado === 'Activo'))
     );
   });
 
@@ -79,32 +98,96 @@ const ListadoSoloReservas = () => {
 
   return (
     <div>
-      <p className='fs-2'>Listado de Reservas</p>
+      <div>
+        <h2 className='fs-2 mb-3' style={{ color: 'white' }}>Listado de Reservas</h2>
+      </div>
       <div className='row align-items-start'>
-        <div className='row'>
-          <div className='col-1'>
-            <label className='form-label fs-4 text-center mt-1'>Buscar:</label>
-          </div>
-          <div className='col-2 pt-1'>
-            <input
-              type='text'
-              value={filtroBusqueda}
-              onChange={handleFiltroBusquedaChange}
-              className='form-control fs-6'
-            />
-          </div>
-          <div className='col-2'>
-            <label className='form-label fs-4 text-center mt-1'>Filtrar por Fecha:</label>
+        <div className='table-responsive'>
+          <div className='row'>
+            <div className='col-xs-2 col-md-2'>
+              <label className='form-label fs-5 text-left mt-1'>Laboratorios:</label>
+              <select
+                value={filtroLaboratorio}
+                onChange={handleFiltroLaboratorioChange}
+                className='form-control fs-6'
+              >
+                <option value=''>Todos</option>
+                {laboratorios.map((lab) => (
+                  <option key={lab.id} value={lab.id}>
+                    {lab.nombre}
+                  </option>
+                ))}
+              </select>
             </div>
-            <div className='col-2 p-1'>
-            <input
-              type='date'
-              value={filtroFecha}
-              onChange={handleFiltroFechaChange}
-              className='form-control fs-6'
-            />
+            <div className='col-xs-2 col-md-2' style={{ flexWrap: 'wrap'}}>
+              <label className='form-label fs-5 text-left mt-1'>Docentes:</label>
+              <select
+                value={filtroDocente}
+                onChange={handleFiltroDocenteChange}
+                className='form-control fs-6'
+              >
+                <option value=''>Todos</option>
+                {docentes.map((doc) => (
+                  <option key={doc.id} value={doc.id}>
+                    {doc.nombre + ' ' + doc.apellido}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className='col-xs-2 col-md-2'>
+              <label className='form-label fs-5 text-center mt-1'>Fechas:</label>
+              <input
+                type='date'
+                value={filtroFecha}
+                onChange={handleFiltroFechaChange}
+                className='form-control fs-6'
+              />
+            </div>
+            <div className='col-xs-2 col-md-2'>
+              <label className='form-label fs-5 text-left mt-1'>Bloques:</label>
+              <select
+                value={filtroBloque}
+                onChange={handleFiltroBloqueChange}
+                className='form-control fs-6'
+              >
+                <option value=''>Seleccion bloque</option>
+                <option value='1er Bloque'>1er Bloque [07:50 - 09:20]</option>
+                <option value='2do Bloque'>2do Bloque [09:30 - 11:00]</option>
+                <option value='3er Bloque'>3er Bloque [11:10 - 12:40]</option>
+                <option value='4to Bloque'>4to Bloque [12:50 - 14-20]</option>
+                <option value='5to Bloque'>5to Bloque [14:30 - 16:00]</option>
+                <option value='6to Bloque'>6to Bloque [16:10 - 17:40]</option>
+                <option value='7mo Bloque'>7mo Bloque [17:50 - 19:20]</option>
+              </select>
+            </div>
+            <div className='col-xs-2 col-md-2'>
+              <label className='form-label fs-5 text-left mt-1'>Estados:</label>
+              <select
+                value={filtroEstado}
+                onChange={handleFiltroEstadoChange}
+                className='form-control fs-6'
+              >
+                <option value=''>Todos</option>
+                <option value='Activo'>Activo</option>
+                <option value='Cancelado'>Cancelado</option>
+              </select>
+            </div>
+            <div className='col-xs-2 col-md-2 text-center'>
+              <button
+              id='btn_exit'
+              className='btn btn-outline-light'
+              onClick={limpiarFiltros}
+              style={{ 
+                padding: '7px',
+                margin: '40px 0px 20px 0px',
+                width: '60%',
+              }}
+              >
+                Limpiar
+              </button>
+            </div>
           </div>
-          <div className='col-12 table-responsive mt-3' style={{ maxHeight: '400px' }}><br/>
+          <div className='col-12' style={{ height: '500px' }}><br />
             <table className='table table-dark table-striped table-hover caption-top align-middle'>
               <thead>
                 <tr>

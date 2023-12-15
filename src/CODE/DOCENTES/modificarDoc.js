@@ -9,7 +9,9 @@ const ModificarDocente = ({ docente, onDocenteModificado }) => {
   const [carreras, setCarreras] = useState([]);
   const [selectedCarrera, setSelectedCarrera] = useState(docente.id_carrera);
   const [modalVisible, setModalVisible] = useState(false);
-  const [alertaVisible, setAlertaVisible] = useState(false);
+  const [alertaVisible1, setAlertaVisible1] = useState(false);
+  const [alertaVisible2, setAlertaVisible2] = useState(false);
+  const [alertaDuplicidad, setAlertaDuplicidad] = useState(false);
 
   const MAX_CARACTERES_NOMBRE = 30;
   const MAX_CARACTERES_APELLIDO = 30;
@@ -28,6 +30,12 @@ const ModificarDocente = ({ docente, onDocenteModificado }) => {
     }
   };
 
+  const validarEmail = (email) => {
+    // Expresión regular para validar un correo electrónico
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
   const handleModificar = () => {
     abrirModal();
   };
@@ -37,9 +45,19 @@ const ModificarDocente = ({ docente, onDocenteModificado }) => {
     resetForm();
   };
 
-  const handleGuardar = () => {
-    if (!nombre || !apellido || !email || !selectedCarrera) {
-      setAlertaVisible(true);
+  const handleGuardar = async () => {
+    // Validaciones iniciales
+    if (!nombre || !apellido || !selectedCarrera) {
+      setAlertaVisible1(true);
+      setAlertaVisible2(false);
+      setAlertaDuplicidad(false);
+      return;
+    }
+
+    if (!validarEmail(email)) {
+      setAlertaVisible1(false);
+      setAlertaVisible2(true);
+      setAlertaDuplicidad(false);
       return;
     }
 
@@ -50,6 +68,30 @@ const ModificarDocente = ({ docente, onDocenteModificado }) => {
       email: email,
       id_carrera: selectedCarrera
     };
+    if (docente.nombre != nombre) {
+      console.log('distintos')
+      // Obtener la lista de docentes existentes
+      const response = await axios.get('https://apilab-backend-sandbox.up.railway.app/obtenerprofesores');
+      const docentesExist = response.data;
+
+      // Verificar si el nuevo docente ya existe
+      const docenteExistente = docentesExist.some(
+        (docente) => docente.nombre === nombre && docente.apellido === apellido
+      );
+
+      if (docenteExistente) {
+        setAlertaVisible1(false);
+        setAlertaVisible2(false);
+        setAlertaDuplicidad(true);
+        return;
+      } else {
+        setAlertaDuplicidad(false);
+      }
+    } else {
+      console.log('iguales')
+    }
+
+
 
     axios
       .put(`https://apilab-backend-sandbox.up.railway.app/modificarprofesor/${docente.id}`, docenteModificado)
@@ -58,6 +100,9 @@ const ModificarDocente = ({ docente, onDocenteModificado }) => {
         cerrarModal();
         resetForm();
         onDocenteModificado();
+        setAlertaVisible1(false);
+        setAlertaVisible2(false);
+        setAlertaDuplicidad(false);
       })
       .catch(error => {
         console.error('Error al modificar el docente:', error);
@@ -70,7 +115,9 @@ const ModificarDocente = ({ docente, onDocenteModificado }) => {
 
   const cerrarModal = () => {
     setModalVisible(false);
-    setAlertaVisible(false);
+    setAlertaVisible1(false);
+    setAlertaVisible2(false);
+    setAlertaDuplicidad(false);
   };
 
   const resetForm = () => {
@@ -79,7 +126,7 @@ const ModificarDocente = ({ docente, onDocenteModificado }) => {
     setEmail((prevEmail) => prevEmail || '');
     setSelectedCarrera((prevSelectedCarrera) => prevSelectedCarrera);
   };
-  
+
   const handleNombreChange = e => {
     const value = e.target.value.slice(0, MAX_CARACTERES_NOMBRE);
     setNombre(value);
@@ -107,7 +154,7 @@ const ModificarDocente = ({ docente, onDocenteModificado }) => {
       {modalVisible && (
         <div className="modal my-5" id="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
           <div className="modal-dialog" role="document">
-          <div className="modal-content border border-white" style={{ marginTop: '100px', height: '650px', background: 'rgb(35, 35, 35)' }}>
+            <div className="modal-content border border-white" style={{ height: '650px', background: 'rgb(35, 35, 35)' }}>
               <div className="modal-header">
                 <h5 className="modal-title fs-3" style={{ color: 'white', marginLeft: '115px' }}>Modificar Docente</h5>
                 <button type="button" className="close" aria-label="Cerrar" style={{ backgroundColor: 'transparent', border: 'none' }} onClick={handleCancelar}>
@@ -146,12 +193,13 @@ const ModificarDocente = ({ docente, onDocenteModificado }) => {
                       maxLength={MAX_CARACTERES_EMAIL}
                     />
                   </div>
-                  <div className="form-group mx-5 px-4">
+                  <div className="form-group">
                     <label className='fs-4' style={{ color: 'white' }}>Carrera:</label>
-                    <select style={{ background: 'white', width: '300px', textAlign: 'center', margin: '0px 10px' }}
-                      className="form-control"
+                    <select
+                      className="form-control  mx-auto"
                       value={selectedCarrera}
                       onChange={handleCarreraChange}
+                      style={{ maxWidth: '300px', textAlign: 'center' }}
                     >
                       <option value="">Seleccione una carrera</option>
                       {carreras.map(carrera => (
@@ -163,14 +211,28 @@ const ModificarDocente = ({ docente, onDocenteModificado }) => {
                   </div>
                 </form>
               </div>
-              {alertaVisible && (
-                <div className="alert alert-danger d-flex mx-5" role="alert">
-                <svg className="text-center" width="24" height="24" role="img" aria-label="Danger:">
-                  <use xlinkHref="#exclamation-triangle-fill" />
+              {alertaVisible1 && (
+                <div className="alert alert-danger d-flex align-items-center" role="alert">
+                  <svg width="24" height="24" role="img" aria-label="Danger:">
+                    <use xlinkHref="#exclamation-triangle-fill" />
                   </svg>
-                  <div>
-                    No puedes dejar campos sin rellenar.
-                  </div>
+                  <div>Por favor, complete todos los campos.</div>
+                </div>
+              )}
+              {alertaVisible2 && (
+                <div className="alert alert-danger d-flex align-items-center" role="alert">
+                  <svg width="24" height="24" role="img" aria-label="Danger:">
+                    <use xlinkHref="#exclamation-triangle-fill" />
+                  </svg>
+                  <div>Por favor, ingrese un email valido.</div>
+                </div>
+              )}
+              {alertaDuplicidad && (
+                <div className="alert alert-danger d-flex align-items-center" role="alert">
+                  <svg width="24" height="24" role="img" aria-label="Danger:">
+                    <use xlinkHref="#exclamation-triangle-fill" />
+                  </svg>
+                  <div>El Docente ya existe.</div>
                 </div>
               )}
               <div className="modal-footer mx-auto">

@@ -124,12 +124,12 @@ function MenuAdministrador() {
     <div className='principal'>
       <div className='container bg-black bg-opacity-75'>
         <div className='cerrarSesion'>
-          <div className="row align-items-center">
+          <div className="row">
             <div className="col">
               <h1 className='fs-2'>GESTIÓN DE RESERVAS DE LABORATORIOS</h1>
             </div>
-            <div className="col-auto">
-              <button id='btn_exit' className='btn btn-outline-light mx-0' onClick={cerrarSesion}>
+            <div className="col-auto mb-3" style={{ textAlign: 'right' }}>
+              <button id='btn_exit' className='btn btn-outline-light mx-5' onClick={cerrarSesion}>
                 Cerrar Sesión
               </button>
             </div>

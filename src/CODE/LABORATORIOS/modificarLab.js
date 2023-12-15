@@ -7,6 +7,7 @@ const ModificarLaboratorio = ({ laboratorio, onLaboratorioModificado }) => {
   const [capacidad, setCapacidad] = useState(laboratorio.capacidad || 0);
   const [modalVisible, setModalVisible] = useState(false);
   const [alertaVisible, setAlertaVisible] = useState(false);
+  const [alertaDuplicidad, setAlertaDuplicidad] = useState(false);
 
   const MAX_CARACTERES_NOMBRE = 30;
   const MAX_CARACTERES_UBICACION = 30;
@@ -21,9 +22,10 @@ const ModificarLaboratorio = ({ laboratorio, onLaboratorioModificado }) => {
     resetForm();
   };
 
-  const handleGuardar = () => {
+  const handleGuardar = async () => {
     if (!nombre || !ubicacion || !capacidad) {
       setAlertaVisible(true);
+      setAlertaDuplicidad(false);
       return;
     }
 
@@ -33,6 +35,29 @@ const ModificarLaboratorio = ({ laboratorio, onLaboratorioModificado }) => {
       ubicacion: ubicacion,
       capacidad: capacidad,
     };
+
+    if (laboratorio.nombre != nombre) {
+      console.log('distintos')
+      // Obtener la lista de laboratorio existentes
+      const response = await axios.get('https://apilab-backend-sandbox.up.railway.app/obtenerlaboratorios');
+      const laboratoriosExist = response.data;
+
+      // Verificar si el nuevo laboratorio ya existe
+      const laboratorioExistente = laboratoriosExist.some(
+        (laboratorio) => laboratorio.nombre === nombre
+      );
+
+      if (laboratorioExistente) {
+        setAlertaDuplicidad(true);
+        setAlertaVisible(false);
+        return;
+      } else {
+        setAlertaDuplicidad(false);
+      }
+    } else {
+      console.log('iguales')
+    }
+
 
     axios
       .put(`https://apilab-backend-sandbox.up.railway.app/modificarlaboratorio/${laboratorio.id}`, laboratorioModificado)
@@ -54,6 +79,7 @@ const ModificarLaboratorio = ({ laboratorio, onLaboratorioModificado }) => {
   const cerrarModal = () => {
     setModalVisible(false);
     setAlertaVisible(false);
+    setAlertaDuplicidad(false);
   };
 
   const resetForm = () => {
@@ -75,10 +101,10 @@ const ModificarLaboratorio = ({ laboratorio, onLaboratorioModificado }) => {
 
   const handleCapacidadChange = e => {
     let value = e.target.value;
-    if (value < 0) {
+    if (value < 1) {
       value = '';
     } else if (value.length > MAX_DIGITOS_CAPACIDAD) {
-      value = value.slice(0, MAX_DIGITOS_CAPACIDAD);
+      value = value.slice(1, MAX_DIGITOS_CAPACIDAD);
     }
     setCapacidad(value);
   };
@@ -91,7 +117,7 @@ const ModificarLaboratorio = ({ laboratorio, onLaboratorioModificado }) => {
       {modalVisible && (
         <div className="modal my-5" id="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
           <div className="modal-dialog" role="document">
-            <div className="modal-content border border-white" style={{ marginTop: '150px', height: '600px', background: 'rgb(35, 35, 35)' }}>
+            <div className="modal-content border border-white" style={{ height: '600px', background: 'rgb(35, 35, 35)' }}>
               <div className="modal-header">
                 <h5 className="modal-title fs-3" style={{ color: 'white', marginLeft: '55px' }}>MODIFICAR LABORATORIO</h5>
                 <button type="button" className="close" aria-label="Cerrar" style={{ backgroundColor: 'transparent', border: 'none' }} onClick={handleCancelar}>
@@ -114,13 +140,13 @@ const ModificarLaboratorio = ({ laboratorio, onLaboratorioModificado }) => {
                     <label className='fs-4' style={{ color: 'white' }}>Ubicación:</label>
                     <select
                       className='form-control mx-auto text-center'
-                      style={{ width: '65%' }}
+                      style={{ maxWidth: '300px' }}
                       value={ubicacion}
                       onChange={handleUbicacionChange}
                     >
                       <option value="">Seleccionar piso</option>
-                      <option value="1er piso">1er piso</option>
                       <option value="2do piso">2do piso</option>
+                      <option value="3er piso">3er piso</option>
                     </select>
                   </div>
                   <div className="form-group text-center">
@@ -143,6 +169,16 @@ const ModificarLaboratorio = ({ laboratorio, onLaboratorioModificado }) => {
                   </svg>
                   <div className=''>
                     No puedes dejar campos en sin rellenar
+                  </div>
+                </div>
+              )}
+              {alertaDuplicidad && (
+                <div className="alert alert-danger d-flex align-items-center" role="alert">
+                  <svg width="24" height="24" role="img" aria-label="Danger:">
+                    <use xlinkHref="#exclamation-triangle-fill" />
+                  </svg>
+                  <div>
+                    El laboratorio ya existe.
                   </div>
                 </div>
               )}

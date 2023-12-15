@@ -5,17 +5,34 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
   const [nombre, setNombre] = useState('');
   const [ubicacion, setUbicacion] = useState('');
   const [capacidad, setCapacidad] = useState('');
+  const [alertaVisible, setAlertaVisible] = useState(false);
+  const [alertaDuplicidad, setAlertaDuplicidad] = useState(false);
 
   const MAX_CARACTERES_NOMBRE = 30;
   const MAX_CARACTERES_UBICACION = 30;
   const MAX_DIGITOS_CAPACIDAD = 3;
 
-  const [alertaVisible, setAlertaVisible] = useState(false);
-
-  const handleAgregar = () => {
+  const handleAgregar = async () => {
     if (!nombre || !ubicacion || !capacidad) {
       setAlertaVisible(true);
       return;
+    }
+
+    // Obtener la lista de laboratorio existentes
+    const response = await axios.get('https://apilab-backend-sandbox.up.railway.app/obtenerlaboratorios');
+    const laboratoriosExist = response.data;
+
+    // Verificar si el nuevo docente ya existe
+    const laboratorioExistente = laboratoriosExist.find(
+      (laboratorio) => laboratorio.nombre === nombre
+    );
+
+    if (laboratorioExistente) {
+      setAlertaDuplicidad(true);
+      setAlertaVisible(false);
+      return;
+    } else {
+      setAlertaDuplicidad(false);
     }
 
     const laboratorio = {
@@ -51,24 +68,24 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
 
   const handleCapacidadChange = (e) => {
     let value = e.target.value;
-    if (value < 0) {
+    if (value < 1) {
       value = '';
     } else if (value.length > MAX_DIGITOS_CAPACIDAD) {
-      value = value.slice(0, MAX_DIGITOS_CAPACIDAD);
+      value = value.slice(1, MAX_DIGITOS_CAPACIDAD);
     }
     setCapacidad(value);
   };
 
   return (
     <div>
-      <form><br/>
-      <h2 className='text-left fs-3' style={{ color: 'white' }} >AGREGAR LABORATORIO</h2>
+      <form style={{ width: '100%' }}><br />
+        <h2 className='text-left fs-3' style={{ color: 'white' }} >AGREGAR LABORATORIO</h2>
         <div className='form-group p-2'>
           <label className='fs-4'>Nombre:</label>
           <input
             type='text'
             className='form-control'
-            style={{ textAlign: 'left', width: '10px' }}
+            style={{ textAlign: 'left', width: '100%' }}
             value={nombre}
             onChange={handleNombreChange}
             maxLength={MAX_CARACTERES_NOMBRE}
@@ -78,13 +95,13 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
           <label className='fs-4'>Ubicación:</label>
           <select
             className='form-control'
-            style={{ maxWidth: '180px' }}
+            style={{ maxWidth: '100%' }}
             value={ubicacion}
             onChange={handleUbicacionChange}
           >
             <option value="">Seleccionar piso</option>
-            <option value="1er piso">1er piso</option>
             <option value="2do piso">2do piso</option>
+            <option value="3er piso">3er piso</option>
           </select>
         </div>
         <div className='form-group p-2'>
@@ -92,18 +109,19 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
           <input
             type='number'
             className='form-control'
-            style={{ width: '10px' }}
+            style={{ width: '100%' }}
             value={capacidad}
             onChange={handleCapacidadChange}
             min={1}
             max={Math.pow(10, MAX_DIGITOS_CAPACIDAD) - 1}
           />
         </div>
-        <div className='d-grid col-8 mx-4'>
+        <div className='form-group p-2'>
           <button
             type='button'
-            className='btn btn-dark mt-5' 
+            className='btn btn-dark mt-5  mx-4'
             onClick={handleAgregar}
+            style={{ minWidth: '80%' }}
           >
             Agregar
           </button>
@@ -116,6 +134,16 @@ const AgregarLaboratorio = ({ onLaboratorioAgregado }) => {
           </svg>
           <div>
             Por favor, complete todos los campos.
+          </div>
+        </div>
+      )}
+      {alertaDuplicidad && (
+        <div className="alert alert-danger d-flex align-items-center text center" role="alert">
+          <svg width="24" height="24" role="img" aria-label="Danger:">
+            <use xlinkHref="#exclamation-triangle-fill" />
+          </svg>
+          <div>
+            El laboratorio ya existe.
           </div>
         </div>
       )}
